@@ -2,7 +2,7 @@
 
 Modern personal site built with **Next.js (App Router)**, **TypeScript**, **Tailwind**, **shadcn/ui**, and **Framer Motion**.
 
-> Live demo: _(add your link once deployed)_  
+ 
 > Note: The app lives in the `my-portfolio/` folder of this repo.
 
 ## Features
