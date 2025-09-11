@@ -158,7 +158,7 @@ const DATA = {
       role: "Operations Manager",
       when: "Oct 2024 – Present",
       desc: "Oversaw daily operations and scheduling to ensure campus safety services ran efficiently.",
-      images: ["/images/footpatrol-1.JPG"],
+      images: ["/images/footpatrol-1.jpg"],
     },
     {
       org: "Canadian Engineering Leadership Competition (CELC)",
@@ -179,7 +179,7 @@ const DATA = {
       role: "VP Outreach (Sponsorship & Club Outreach)",
       when: "2025 – Present",
       desc: "Coordinated sponsorships and cross-club collaborations to expand event reach.",
-      images: ["/images/jcc.JPG"],
+      images: ["/images/jcc.jpg"],
     },
     {
       org: "UES Sustainability",
