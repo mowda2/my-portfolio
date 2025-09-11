@@ -112,7 +112,7 @@ const DATA = {
         {
           type: "video",
           src: "/videos/Dashboard Demo.mp4",
-          poster: "/images/videoAnalyzed.jpg",
+          poster: "/images/videoAnalyzed.png",
           alt: "Dashboard demo clip",
         },
         { type: "image", src: "/images/videoAnalyzed.png", alt: "Dashboard UI" },
@@ -141,7 +141,7 @@ const DATA = {
       points: [
         "Generated $13k+ in sales, consistently exceeding daily targets through customer engagement and upselling.",
       ],
-      images: ["/images/decoPic.png"],
+      images: ["/images/decoPic.PNG"],
       links: [],
     },
   ],
@@ -159,14 +159,14 @@ const DATA = {
       role: "Operations Manager",
       when: "Oct 2024 – Present",
       desc: "Oversaw daily operations and scheduling to ensure campus safety services ran efficiently.",
-      images: ["/images/footpatrol-1.jpg"],
+      images: ["/images/footpatrol-1.JPG"],
     },
     {
       org: "Canadian Engineering Leadership Competition (CELC)",
       role: "Director of Finance",
       when: "2025",
       desc: "Managed budgeting and sponsorship coordination for national engineering leadership conference.",
-      images: ["/images/celc-1.jpeg"],
+      images: ["/images/CELC-1.jpeg"],
     },
     {
       org: "Kurdish Club (Western)",
@@ -180,7 +180,7 @@ const DATA = {
       role: "VP Outreach (Sponsorship & Club Outreach)",
       when: "2025 – Present",
       desc: "Coordinated sponsorships and cross-club collaborations to expand event reach.",
-      images: ["/images/jcc.jpg"],
+      images: ["/images/jcc.JPG"],
     },
     {
       org: "UES Sustainability",
@@ -263,7 +263,7 @@ const DATA = {
     },
     {
       title: "1st – Western MSA Hackathon (SinaAI Stream) – QCare",
-      image: "/images/MSAHack.PNG",
+      image: "/images/MsaHack.PNG",
       issuer: "Western MSA",
     },
     {
