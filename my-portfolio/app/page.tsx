@@ -117,7 +117,6 @@ const DATA = {
         },
         { type: "image", src: "/images/videoAnalyzed.png", alt: "Dashboard UI" },
       ],
-      images: ["/images/research-1.jpg", "/images/research-2.jpg", "/images/research-3.jpg"],
     },
     {
       org: "Western Engineering Competition (WEC)",
