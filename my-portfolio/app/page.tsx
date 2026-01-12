@@ -328,7 +328,7 @@ const DATA = {
     { title: "1st — GM & OVIN Automotive Innovation Challenge", image: "/images/inovchallenge.PNG" },
     { title: "1st — Western MSA Hackathon (QCare)", image: "/images/MsaHack.PNG" },
     { title: "1st — HackWestern (Vinculum)", image: "/images/HackWestern.PNG" },
-    { title: "2nd — Stupid Hackathon 2025", image: "/images/stupid-hack-team.png" },
+    { title: "2nd — Stupid Hackathon 2025", image: "/images/stupid-hack-app.png" },
     { title: "Dean's Honor List", image: "/images/Deanshonorlistr.png" },
   ],
 };
