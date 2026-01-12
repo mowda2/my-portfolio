@@ -181,7 +181,7 @@ const DATA = {
       period: "Sep 2024 - Present",
       description: "Committed to enhancing and maintaining campus safety by providing services for students and staff.",
       logo: "/images/footpatrol-1.jpg",
-      gallery: ["/images/footpatrol-event.png"],
+      gallery: [],
     },
     { 
       org: "Kurdish Student Association", 
