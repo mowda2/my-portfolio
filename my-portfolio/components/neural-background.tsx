@@ -1,7 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useCallback, useMemo } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import React, { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+
+// =============================================================================
+// NEURAL BACKGROUND - Subtle animated canvas with connecting nodes
+// =============================================================================
 
 interface Node {
   x: number;
@@ -9,53 +13,13 @@ interface Node {
   vx: number;
   vy: number;
   radius: number;
-  connections: number[];
 }
 
 export function NeuralBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number>(0);
   const nodesRef = useRef<Node[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
-  const { scrollY } = useScroll();
-  
-  const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
-  const scrollYSpring = useSpring(scrollY, springConfig);
-  
-  const opacity = useTransform(scrollYSpring, [0, 500], [0.6, 0.3]);
-  const scale = useTransform(scrollYSpring, [0, 1000], [1, 1.1]);
-
-  const initNodes = useCallback((width: number, height: number) => {
-    const nodeCount = Math.min(Math.floor((width * height) / 25000), 80);
-    const nodes: Node[] = [];
-    
-    for (let i = 0; i < nodeCount; i++) {
-      nodes.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        radius: Math.random() * 2 + 1,
-        connections: [],
-      });
-    }
-    
-    // Pre-calculate potential connections
-    nodes.forEach((node, i) => {
-      nodes.forEach((other, j) => {
-        if (i !== j) {
-          const dx = node.x - other.x;
-          const dy = node.y - other.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 200) {
-            node.connections.push(j);
-          }
-        }
-      });
-    });
-    
-    return nodes;
-  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -64,241 +28,356 @@ export function NeuralBackground() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const handleResize = () => {
+    const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      nodesRef.current = initNodes(canvas.width, canvas.height);
+      initNodes();
+    };
+
+    const initNodes = () => {
+      const nodeCount = Math.min(50, Math.floor((window.innerWidth * window.innerHeight) / 25000));
+      nodesRef.current = [];
+      
+      for (let i = 0; i < nodeCount; i++) {
+        nodesRef.current.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          radius: 1.5 + Math.random() * 1.5,
+        });
+      }
     };
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
     };
 
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("mousemove", handleMouseMove);
-
     const animate = () => {
       if (!ctx || !canvas) return;
       
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       const nodes = nodesRef.current;
       const mouse = mouseRef.current;
-      
+      const connectionDistance = 150;
+
       // Update and draw nodes
       nodes.forEach((node, i) => {
-        // Mouse interaction
-        const dx = mouse.x - node.x;
-        const dy = mouse.y - node.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        // Mouse interaction - gentle repulsion
+        const mdx = mouse.x - node.x;
+        const mdy = mouse.y - node.y;
+        const mouseDist = Math.sqrt(mdx * mdx + mdy * mdy);
         
-        if (dist < 150) {
-          const force = (150 - dist) / 150;
-          node.vx -= (dx / dist) * force * 0.02;
-          node.vy -= (dy / dist) * force * 0.02;
+        if (mouseDist < 120 && mouseDist > 0) {
+          const force = (120 - mouseDist) / 120 * 0.3;
+          node.vx -= (mdx / mouseDist) * force;
+          node.vy -= (mdy / mouseDist) * force;
         }
-        
+
         // Update position
         node.x += node.vx;
         node.y += node.vy;
-        
-        // Boundary check with soft bounce
-        if (node.x < 0 || node.x > canvas.width) {
-          node.vx *= -0.8;
-          node.x = Math.max(0, Math.min(canvas.width, node.x));
-        }
-        if (node.y < 0 || node.y > canvas.height) {
-          node.vy *= -0.8;
-          node.y = Math.max(0, Math.min(canvas.height, node.y));
-        }
-        
-        // Damping
+
+        // Boundary wrapping
+        if (node.x < 0) node.x = canvas.width;
+        if (node.x > canvas.width) node.x = 0;
+        if (node.y < 0) node.y = canvas.height;
+        if (node.y > canvas.height) node.y = 0;
+
+        // Friction
         node.vx *= 0.99;
         node.vy *= 0.99;
-        
-        // Draw connections
-        nodes.forEach((other, j) => {
-          if (i < j) {
-            const cdx = node.x - other.x;
-            const cdy = node.y - other.y;
-            const cdist = Math.sqrt(cdx * cdx + cdy * cdy);
-            
-            if (cdist < 180) {
-              const alpha = (1 - cdist / 180) * 0.15;
-              ctx.beginPath();
-              ctx.moveTo(node.x, node.y);
-              ctx.lineTo(other.x, other.y);
-              ctx.strokeStyle = `rgba(0, 229, 204, ${alpha})`;
-              ctx.lineWidth = 0.5;
-              ctx.stroke();
-            }
+
+        // Random drift
+        node.vx += (Math.random() - 0.5) * 0.01;
+        node.vy += (Math.random() - 0.5) * 0.01;
+
+        // Draw connections to nearby nodes
+        for (let j = i + 1; j < nodes.length; j++) {
+          const other = nodes[j];
+          const dx = other.x - node.x;
+          const dy = other.y - node.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < connectionDistance) {
+            const alpha = (1 - dist / connectionDistance) * 0.15;
+            ctx.beginPath();
+            ctx.moveTo(node.x, node.y);
+            ctx.lineTo(other.x, other.y);
+            ctx.strokeStyle = `rgba(0, 229, 204, ${alpha})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
           }
-        });
-        
+        }
+
         // Draw node
-        const nodeAlpha = dist < 150 ? 0.8 : 0.4;
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 229, 204, ${nodeAlpha})`;
+        ctx.fillStyle = "rgba(0, 229, 204, 0.4)";
         ctx.fill();
-        
-        // Glow effect for nodes near mouse
-        if (dist < 100) {
-          ctx.beginPath();
-          ctx.arc(node.x, node.y, node.radius * 3, 0, Math.PI * 2);
-          const gradient = ctx.createRadialGradient(
-            node.x, node.y, 0,
-            node.x, node.y, node.radius * 3
-          );
-          gradient.addColorStop(0, "rgba(0, 229, 204, 0.3)");
-          gradient.addColorStop(1, "rgba(0, 229, 204, 0)");
-          ctx.fillStyle = gradient;
-          ctx.fill();
-        }
       });
-      
+
       animationRef.current = requestAnimationFrame(animate);
     };
 
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("mousemove", handleMouseMove);
     animate();
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", resizeCanvas);
       window.removeEventListener("mousemove", handleMouseMove);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      cancelAnimationFrame(animationRef.current);
     };
-  }, [initNodes]);
+  }, []);
 
   return (
-    <motion.div
-      className="fixed inset-0 -z-10 pointer-events-none"
-      style={{ opacity, scale }}
-    >
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
-      />
-      {/* Topographic overlay */}
-      <div className="absolute inset-0 topo-pattern opacity-30" />
-      {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-background/50" />
-    </motion.div>
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 z-0 pointer-events-none opacity-50"
+    />
   );
 }
 
-// Animated connection lines between sections
-export function SectionConnector({ className }: { className?: string }) {
-  return (
-    <div className={`relative h-24 w-full overflow-hidden ${className}`}>
-      <svg
-        className="absolute inset-0 w-full h-full"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-      >
-        <motion.path
-          d="M 0 50 Q 25 20, 50 50 T 100 50"
-          fill="none"
-          stroke="url(#gradient-line)"
-          strokeWidth="0.5"
-          initial={{ pathLength: 0, opacity: 0 }}
-          whileInView={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration: 1.5, ease: "easeInOut" }}
-        />
-        <defs>
-          <linearGradient id="gradient-line" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(0, 229, 204, 0)" />
-            <stop offset="50%" stopColor="rgba(0, 229, 204, 0.5)" />
-            <stop offset="100%" stopColor="rgba(0, 229, 204, 0)" />
-          </linearGradient>
-        </defs>
-      </svg>
-      
-      {/* Animated pulse along the line */}
-      <motion.div
-        className="absolute top-1/2 w-2 h-2 rounded-full bg-cyan-400"
-        style={{ transform: "translate(-50%, -50%)" }}
-        animate={{
-          left: ["0%", "100%"],
-          opacity: [0, 1, 1, 0],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "linear",
-        }}
-      />
-    </div>
-  );
-}
+// =============================================================================
+// FLOATING NODES - Decorative floating elements for hero section
+// =============================================================================
 
-// Floating geometric shapes for hero
 export function FloatingNodes() {
-  const nodes = useMemo(() => 
-    Array.from({ length: 12 }, (_, i) => ({
-      id: i,
-      x: 10 + Math.random() * 80,
-      y: 10 + Math.random() * 80,
-      size: 4 + Math.random() * 8,
-      delay: Math.random() * 2,
-      duration: 4 + Math.random() * 4,
-    })), []
-  );
+  const nodes = [
+    { size: 6, x: "15%", y: "20%", delay: 0, duration: 8 },
+    { size: 4, x: "85%", y: "25%", delay: 1, duration: 10 },
+    { size: 8, x: "75%", y: "70%", delay: 2, duration: 7 },
+    { size: 5, x: "10%", y: "75%", delay: 0.5, duration: 9 },
+    { size: 3, x: "50%", y: "15%", delay: 1.5, duration: 11 },
+    { size: 7, x: "90%", y: "60%", delay: 3, duration: 8 },
+  ];
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {nodes.map((node) => (
+      {nodes.map((node, i) => (
         <motion.div
-          key={node.id}
-          className="absolute rounded-full border border-cyan-500/30 bg-cyan-500/5"
+          key={i}
+          className="absolute rounded-full bg-[#00E5CC]"
           style={{
-            left: `${node.x}%`,
-            top: `${node.y}%`,
             width: node.size,
             height: node.size,
+            left: node.x,
+            top: node.y,
+            boxShadow: `0 0 ${node.size * 3}px rgba(0, 229, 204, 0.5)`,
           }}
           animate={{
-            y: [-10, 10, -10],
+            y: [0, -20, 0],
             opacity: [0.3, 0.6, 0.3],
-            scale: [1, 1.2, 1],
           }}
           transition={{
             duration: node.duration,
-            delay: node.delay,
             repeat: Infinity,
+            delay: node.delay,
             ease: "easeInOut",
           }}
         />
       ))}
       
-      {/* Connection lines between some nodes */}
-      <svg className="absolute inset-0 w-full h-full">
-        {nodes.slice(0, 6).map((node, i) => {
-          const nextNode = nodes[(i + 3) % nodes.length];
-          return (
-            <motion.line
-              key={`line-${i}`}
-              x1={`${node.x}%`}
-              y1={`${node.y}%`}
-              x2={`${nextNode.x}%`}
-              y2={`${nextNode.y}%`}
-              stroke="rgba(0, 229, 204, 0.1)"
-              strokeWidth="1"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{
-                duration: 2,
-                delay: node.delay,
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-            />
-          );
-        })}
-      </svg>
+      {/* Ambient glow orbs */}
+      <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-[#00E5CC]/5 blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-[#FFAA00]/5 blur-3xl" />
     </div>
+  );
+}
+
+// =============================================================================
+// SECTION CONNECTOR - Visual connection between sections
+// =============================================================================
+
+export function SectionConnector() {
+  return (
+    <div className="relative h-24 flex items-center justify-center overflow-hidden">
+      <motion.div
+        className="absolute h-full w-px bg-gradient-to-b from-transparent via-[#00E5CC]/30 to-transparent"
+        initial={{ scaleY: 0 }}
+        whileInView={{ scaleY: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      />
+      <motion.div
+        className="w-2 h-2 rounded-full bg-[#00E5CC]"
+        initial={{ scale: 0 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4, delay: 0.4 }}
+        style={{ boxShadow: "0 0 10px rgba(0, 229, 204, 0.5)" }}
+      />
+    </div>
+  );
+}
+
+// =============================================================================
+// SCROLL PROGRESS INDICATOR
+// =============================================================================
+
+export function ScrollProgress() {
+  const [progress, setProgress] = React.useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = window.scrollY;
+      setProgress((scrolled / scrollHeight) * 100);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <div className="fixed top-0 left-0 right-0 h-0.5 z-50 bg-white/5">
+      <motion.div
+        className="h-full bg-gradient-to-r from-[#00E5CC] to-[#FFAA00]"
+        style={{ width: `${progress}%` }}
+      />
+    </div>
+  );
+}
+
+// =============================================================================
+// MAGNETIC BUTTON WRAPPER
+// =============================================================================
+
+interface MagneticProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function Magnetic({ children, className = "" }: MagneticProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = React.useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const x = (e.clientX - centerX) * 0.15;
+    const y = (e.clientY - centerY) * 0.15;
+    setPosition({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      className={`inline-flex ${className}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 200, damping: 20 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// =============================================================================
+// REVEAL ON SCROLL
+// =============================================================================
+
+interface RevealProps {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}
+
+export function Reveal({ children, className = "", delay = 0 }: RevealProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isVisible ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay, ease: [0.25, 0.1, 0.25, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// =============================================================================
+// ANIMATED COUNTER
+// =============================================================================
+
+interface CounterProps {
+  value: number;
+  suffix?: string;
+  duration?: number;
+  className?: string;
+}
+
+export function AnimatedCounter({ value, suffix = "", duration = 2, className = "" }: CounterProps) {
+  const [count, setCount] = React.useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          
+          const startTime = Date.now();
+          const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / (duration * 1000), 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setCount(Math.floor(eased * value));
+            
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            }
+          };
+          
+          animate();
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, [value, duration]);
+
+  return (
+    <span ref={ref} className={className}>
+      {count}{suffix}
+    </span>
   );
 }

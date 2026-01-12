@@ -20,12 +20,13 @@ import {
   Play,
   Trophy,
   Calendar,
+  Camera,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { NeuralBackground, FloatingNodes, SectionConnector } from "@/components/neural-background";
+import { NeuralBackground, FloatingNodes, SectionConnector, ScrollProgress, Magnetic } from "@/components/neural-background";
 
 /** ==========================================================
  * DATA
@@ -79,43 +80,176 @@ const DATA = {
     {
       org: "Western University – Intelligent/Autonomous Systems Lab",
       title: "Undergraduate Research Assistant",
+      type: "Work",
       start: "May 2025",
       end: "Present",
       points: [
+        "Contributed to applied AI research by implementing ROS 2-based pipelines for real-time object detection, multi-camera handling, and thermal imaging analysis.",
         "Built a multiview AI dashboard for thermal + RGB streams (Next.js + FastAPI, WebSockets) with real-time YOLOv11 overlays and event logging.",
         "Developed a ROS 2 (rclpy) pipeline with parameterized launch files for dynamic multi-camera discovery and synchronized topics.",
-        "Published detection messages and improved throughput for NVIDIA hardware deployments.",
       ],
+      skills: ["ROS", "Python", "C++", "JavaScript", "FastAPI", "Object Detection", "Data Visualization"],
       media: [
         { type: "video", src: "/videos/Dashboard Demo.mp4", poster: "/images/videoAnalyzed.png" },
         { type: "image", src: "/images/videoAnalyzed.png" },
       ],
     },
     {
-      org: "Western Engineering Competition (WEC)",
-      title: "VP Technical (Website & LMS)",
-      start: "Mar 2025",
+      org: "RBC",
+      title: "Design Thinking Fellow",
+      type: "Work",
+      start: "Sep 2025",
       end: "Present",
       points: [
-        "Built and maintained the public site and LMS pages; handled 650+ registrations throughout event weekend.",
-        "Streamlined content updates, schedules, and resources for competitors and volunteers.",
+        "Exploring how AI and emerging technologies can create new use cases in traditionally non-technical industries through a 3-month design thinking program.",
+        "Designed and prototyped Canon Health, a secure patient-doctor platform for managing medical documentation with QR-code access, offline signed payloads, and encryption.",
+        "Pitched to Dean Kenneth Coley, Dean of Engineering at Western, receiving valuable feedback.",
       ],
-      images: ["/images/wechome.png"],
+      skills: ["Design Thinking", "Project Management", "Product Development", "Business Innovation", "Pitch Development"],
+      media: [
+        { type: "image", src: "/images/rbc-pitch-wide.jpg" },
+        { type: "image", src: "/images/rbc-pitch-closeup.jpg" },
+        { type: "image", src: "/images/rbc-pitch-presenting.jpg" },
+      ],
+    },
+    {
+      org: "Western Engineering Competition (WEC)",
+      title: "VP Technical",
+      type: "Work",
+      start: "May 2025",
+      end: "Nov 2025",
+      points: [
+        "Managed the LMS, website, and core systems built over months of prep for 470+ competitors.",
+        "Coordinated communication and support systems for competitors.",
+        "Oversaw backend operations to keep everything running smoothly.",
+        "Volunteered at HackWestern between rounds, helping teams debug code and refine their ideas.",
+      ],
+      skills: ["Web Development", "Leadership", "Event Management"],
+      media: [
+        { type: "image", src: "/images/wec-team-group.jpg" },
+        { type: "image", src: "/images/wec-team-standing.jpg" },
+        { type: "image", src: "/images/wec-audience.jpg" },
+      ],
       links: [{ label: "Visit website", href: "https://www.westernengineeringcompetition.ca/" }],
     },
     {
-      org: "DECO Repair",
+      org: "DECO Windshield Repair",
       title: "Sales Representative",
-      start: "Apr 2024",
-      end: "Sept 2024",
+      type: "Work",
+      start: "Mar 2024",
+      end: "Sep 2024",
       points: [
-        "Generated $13k+ in sales, consistently exceeding daily targets through customer engagement and upselling.",
+        "Utilized CRM software to manage customer interactions and sales pipelines, improving workflow efficiency.",
+        "Generated over $15,000 in revenue through personalized customer consultations, providing tailored service recommendations and strengthening client relationships.",
       ],
-      images: ["/images/decoPic.PNG"],
+      skills: ["Communication", "Sales", "Team Building", "Marketing", "Customer Service", "CRM Software"],
+      media: [
+        { type: "image", src: "/images/decoPic.PNG" },
+      ],
+    },
+  ],
+
+  // Leadership & Volunteering roles
+  volunteering: [
+    { 
+      org: "Engineers Without Borders", 
+      role: "VP of Projects", 
+      period: "Sep 2023 - Present",
+      description: "Directed project teams in designing and deploying technology-driven engineering solutions focused on sustainability and community impact for underserved regions. Expanded STEM outreach by leading workshops and interactive sessions.",
+      logo: "/images/ewb-1.PNG",
+      gallery: ["/images/ewb-2.PNG"],
+    },
+    { 
+      org: "UES Sustainability Committee", 
+      role: "Director of Sustainability", 
+      period: "Sep 2025 - Present",
+      description: "Organized and led a campuswide Sustainability Hackathon (Campus: Hacked) challenging students to design technical solutions for improving sustainability at Western. Coordinated logistics, partnerships, and judging.",
+      logo: "/images/campus-hacked-team.jpg",
+      gallery: [],
+    },
+    { 
+      org: "Jordanian Cultural Club Western", 
+      role: "Vice President of Outreach", 
+      period: "Aug 2025 - Present",
+      description: "Responsible for club's outreach efforts including working with sponsors, fundraising for initiatives, and collaboration with other associations.",
+      logo: "/images/jcc.jpg",
+      gallery: [],
+    },
+    { 
+      org: "Western Foot Patrol", 
+      role: "Operations Manager", 
+      period: "Sep 2024 - Present",
+      description: "Committed to enhancing and maintaining campus safety by providing services for students and staff.",
+      logo: "/images/footpatrol-1.jpg",
+      gallery: ["/images/footpatrol-event.png"],
+    },
+    { 
+      org: "Kurdish Student Association", 
+      role: "Vice President", 
+      period: "Oct 2024 - Present",
+      description: "Responsible for managing all teams and operations.",
+      logo: "/images/kurdpic-1.PNG",
+      gallery: [],
+    },
+    { 
+      org: "CELC 2025", 
+      role: "Director of Finance", 
+      period: "2024 - 2025",
+      description: "Managing financial operations for the Canadian Engineering Leadership Conference.",
+      logo: "/images/CELC-1.jpeg",
+      gallery: [],
+    },
+  ],
+
+  // Photo gallery / moments
+  gallery: [
+    {
+      title: "WEC Weekend",
+      description: "Supporting 470+ competitors across Ontario at the Western Engineering Competition as part of the organizing team.",
+      image: "/images/wec-team-group.jpg",
+      date: "Nov 2025",
+    },
+    {
+      title: "Campus: Hacked - Sustainability Hackathon",
+      description: "Innovation meets Sustainability at Western Engineering. Students tackled real-world environmental challenges, from smart waste systems to the 'Ride W' carpooling app.",
+      image: "/images/campus-hacked-team.jpg",
+      images: ["/images/campus-hacked-team.jpg", "/images/sustainability-hack-presentation.gif", "/images/sustainability-hack-ridew.gif"],
+      date: "Nov 2025",
+    },
+    {
+      title: "RBC Design Thinking - Canon Health",
+      description: "Built Canon Health with my team - a secure patient-doctor platform. Pitched to Dean Kenneth Coley, Dean of Engineering at Western.",
+      image: "/images/rbc-pitch-wide.jpg",
+      date: "Dec 2025",
+    },
+    {
+      title: "GreenHaX '25 - EWB Hackathon",
+      description: "Organized and ran GreenHaX '25, a sustainability-focused hackathon presented by Engineers Without Borders UWO.",
+      image: "/images/ewb-2.PNG",
+      date: "2025",
+    },
+    {
+      title: "Stupid Hackathon 2025 - 2nd Place",
+      description: "Built 'Weldon Seat Sonar' - a webcam app that detects empty chairs and annoys people into leaving. Features hostile UX, fake ads, and a cookie banner that tracks your soul.",
+      image: "/images/stupid-hack-app.png",
+      images: ["/images/stupid-hack-app.png"],
+      date: "Dec 2025",
     },
   ],
 
   projects: [
+    {
+      name: "Canon Health",
+      impact: "RBC Design Thinking Program — Secure Healthcare Platform",
+      bullets: [
+        { title: "Patient-Owned Records", text: "data model that pulls records from multiple providers with granular consent." },
+        { title: "Document Workflow", text: "scan, upload, request documents with approve/deny access controls." },
+        { title: "Security First", text: "2FA (DUO push), TLS/HTTPS encryption, healthcare-grade security." },
+      ],
+      tags: ["React", "Node.js", "Encryption", "Healthcare", "Design Thinking"],
+      links: [{ label: "GitHub", href: "https://github.com/mowda2/canon-health-mpv" }],
+      featured: true,
+    },
     {
       name: "Object Detection Dashboard",
       impact: "Real-time multi-camera AI analysis platform",
@@ -129,6 +263,18 @@ const DATA = {
       featured: true,
       video: "/videos/Dashboard Demo.mp4",
       poster: "/images/videoAnalyzed.png",
+    },
+    {
+      name: "Weldon Seat Sonar",
+      impact: "2nd Place — Stupid Hackathon 2025",
+      bullets: [
+        { title: "Chair Detection", text: "webcam-based empty chair detection using COCO-SSD model." },
+        { title: "Hostile UX", text: "intentionally annoying interface with fake ads, popups, and a cookie banner that 'tracks your soul'." },
+        { title: "Maximum Chaos", text: "designed to frustrate users into leaving their seats - the stupidest solution to library seating." },
+      ],
+      tags: ["React", "TensorFlow.js", "Computer Vision", "Bad UX"],
+      links: [{ label: "GitHub", href: "https://github.com/stevensalib05/consent-driven-development" }],
+      featured: true,
     },
     {
       name: "Thermal Road-User Detection",
@@ -178,18 +324,11 @@ const DATA = {
     },
   ],
 
-  volunteering: [
-    { org: "Engineers Without Borders", role: "VP Projects & Software Advisor", logo: "/images/ewb-1.PNG" },
-    { org: "Western Foot Patrol", role: "Operations Manager", logo: "/images/footpatrol-1.jpg" },
-    { org: "CELC 2025", role: "Director of Finance", logo: "/images/CELC-1.jpeg" },
-    { org: "Kurdish Club", role: "Vice President", logo: "/images/kurdpic-1.PNG" },
-    { org: "UES Sustainability", role: "Director of Outreach", logo: "/images/sustain-1.png" },
-  ],
-
   awards: [
     { title: "1st — GM & OVIN Automotive Innovation Challenge", image: "/images/inovchallenge.PNG" },
     { title: "1st — Western MSA Hackathon (QCare)", image: "/images/MsaHack.PNG" },
     { title: "1st — HackWestern (Vinculum)", image: "/images/HackWestern.PNG" },
+    { title: "2nd — Stupid Hackathon 2025", image: "/images/stupid-hack-team.png" },
     { title: "Dean's Honor List", image: "/images/Deanshonorlistr.png" },
   ],
 };
@@ -445,29 +584,35 @@ function HeroSection() {
             </div>
 
             <div className="mt-8 flex items-center justify-center lg:justify-start gap-4">
-              <a
-                href={DATA.contacts.github}
-                target="_blank"
-                className="p-3 rounded-full glass hover:bg-white/10 transition-colors"
-                aria-label="GitHub"
-              >
-                <Github className="h-5 w-5" />
-              </a>
-              <a
-                href={DATA.contacts.linkedin}
-                target="_blank"
-                className="p-3 rounded-full glass hover:bg-white/10 transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
-              <a
-                href={`mailto:${DATA.contacts.email}`}
-                className="p-3 rounded-full glass hover:bg-white/10 transition-colors"
-                aria-label="Email"
-              >
-                <Mail className="h-5 w-5" />
-              </a>
+              <Magnetic>
+                <a
+                  href={DATA.contacts.github}
+                  target="_blank"
+                  className="p-3 rounded-full glass hover:bg-white/10 hover:ring-1 hover:ring-[#00E5CC]/30 transition-all"
+                  aria-label="GitHub"
+                >
+                  <Github className="h-5 w-5" />
+                </a>
+              </Magnetic>
+              <Magnetic>
+                <a
+                  href={DATA.contacts.linkedin}
+                  target="_blank"
+                  className="p-3 rounded-full glass hover:bg-white/10 hover:ring-1 hover:ring-[#00E5CC]/30 transition-all"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </a>
+              </Magnetic>
+              <Magnetic>
+                <a
+                  href={`mailto:${DATA.contacts.email}`}
+                  className="p-3 rounded-full glass hover:bg-white/10 hover:ring-1 hover:ring-[#00E5CC]/30 transition-all"
+                  aria-label="Email"
+                >
+                  <Mail className="h-5 w-5" />
+                </a>
+              </Magnetic>
             </div>
           </motion.div>
 
@@ -1021,36 +1166,408 @@ function AwardsSection() {
  * Volunteering Section
  * ========================================================== */
 function VolunteeringSection() {
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  const [lightbox, setLightbox] = useState<{ images: string[]; currentIndex: number; org: string; role: string } | null>(null);
+
+  const nextImage = () => {
+    if (lightbox && lightbox.images.length > 1) {
+      setLightbox({
+        ...lightbox,
+        currentIndex: (lightbox.currentIndex + 1) % lightbox.images.length
+      });
+    }
+  };
+
+  const prevImage = () => {
+    if (lightbox && lightbox.images.length > 1) {
+      setLightbox({
+        ...lightbox,
+        currentIndex: (lightbox.currentIndex - 1 + lightbox.images.length) % lightbox.images.length
+      });
+    }
+  };
+
   return (
     <Section id="volunteering">
       <SectionHeader title="Leadership & Community" subtitle="Giving back and growing together" />
       
-      <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4">
-        {DATA.volunteering.map((vol, i) => (
-          <motion.div
-            key={vol.org}
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.05 }}
-            className="flex-shrink-0"
-          >
-            <Card className="glass-card w-64 hover:border-white/20 transition-colors">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-white/5 flex-shrink-0">
-                    <img src={vol.logo} alt={vol.org} className="w-full h-full object-cover" />
+      <div className="grid sm:grid-cols-2 gap-6">
+        {DATA.volunteering.map((vol, i) => {
+          const isExpanded = expandedCard === `${vol.org}-${vol.role}`;
+          const uniqueKey = `${vol.org}-${vol.role}`;
+          const allImages = [vol.logo, ...(vol.gallery || [])];
+          
+          return (
+            <motion.div
+              key={uniqueKey}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+            >
+              <Card className="glass-card group hover:border-[#00E5CC]/30 transition-all duration-300 overflow-hidden">
+                {/* Main Image - Click to view in lightbox with all images */}
+                <button
+                  className="w-full"
+                  onClick={() => setLightbox({ images: allImages, currentIndex: 0, org: vol.org, role: vol.role })}
+                >
+                  <div className="relative aspect-[16/10] overflow-hidden bg-white/5">
+                    <img 
+                      src={vol.logo} 
+                      alt={vol.org} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0F] via-[#0D0D0F]/40 to-transparent" />
+                    
+                    {/* Image count badge */}
+                    {allImages.length > 1 && (
+                      <div className="absolute top-3 left-3 px-2 py-1 rounded-full bg-black/50 backdrop-blur-sm text-xs text-white flex items-center gap-1">
+                        <Camera className="w-3 h-3" />
+                        {allImages.length}
+                      </div>
+                    )}
+                    
+                    {/* Click to expand indicator */}
+                    <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <svg className="w-4 h-4 text-[#00E5CC]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                      </svg>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <p className="font-medium text-sm truncate">{vol.org}</p>
-                    <p className="text-xs text-[#8A8F98] truncate">{vol.role}</p>
+                </button>
+                
+                {/* Content */}
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg leading-tight">{vol.org}</h3>
+                      <p className="text-[#00E5CC] text-sm mt-1">{vol.role}</p>
+                      {vol.period && (
+                        <p className="text-[#8A8F98] text-xs mt-1">{vol.period}</p>
+                      )}
+                    </div>
+                    {vol.description && (
+                      <button
+                        onClick={() => setExpandedCard(isExpanded ? null : uniqueKey)}
+                        className="shrink-0 p-2 rounded-lg hover:bg-white/5 transition-colors"
+                      >
+                        <ChevronDown className={`h-4 w-4 text-[#8A8F98] transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                      </button>
+                    )}
                   </div>
+                  
+                  {/* Expandable description */}
+                  <AnimatePresence>
+                    {isExpanded && vol.description && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <p className="text-sm text-[#8A8F98] mt-3 leading-relaxed border-t border-white/10 pt-3">
+                          {vol.description}
+                        </p>
+                        
+                        {/* Gallery preview - clickable thumbnails */}
+                        {allImages.length > 1 && (
+                          <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
+                            {allImages.map((img, idx) => (
+                              <button
+                                key={idx}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setLightbox({ images: allImages, currentIndex: idx, org: vol.org, role: vol.role });
+                                }}
+                                className="shrink-0 w-20 h-14 rounded-lg overflow-hidden border border-white/10 hover:border-[#00E5CC]/50 transition-colors"
+                              >
+                                <img src={img} alt={`${vol.org} event ${idx + 1}`} className="w-full h-full object-cover" />
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
+              </Card>
+            </motion.div>
+          );
+        })}
       </div>
+
+      {/* Lightbox Modal with Navigation */}
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setLightbox(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="relative max-w-4xl w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setLightbox(null)}
+                className="absolute -top-12 right-0 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+              
+              {/* Navigation arrows */}
+              {lightbox.images.length > 1 && (
+                <>
+                  <button
+                    onClick={prevImage}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/50 hover:bg-black/70 transition-colors z-10"
+                  >
+                    <ChevronDown className="h-6 w-6 rotate-90" />
+                  </button>
+                  <button
+                    onClick={nextImage}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/50 hover:bg-black/70 transition-colors z-10"
+                  >
+                    <ChevronDown className="h-6 w-6 -rotate-90" />
+                  </button>
+                </>
+              )}
+              
+              {/* Image */}
+              <div className="rounded-2xl overflow-hidden">
+                <img
+                  src={lightbox.images[lightbox.currentIndex]}
+                  alt={lightbox.org}
+                  className="w-full h-auto max-h-[70vh] object-contain bg-[#141418]"
+                />
+              </div>
+              
+              {/* Caption and counter */}
+              <div className="mt-4 text-center">
+                <h3 className="text-xl font-semibold">{lightbox.org}</h3>
+                <p className="text-[#00E5CC] mt-1">{lightbox.role}</p>
+                {lightbox.images.length > 1 && (
+                  <p className="text-[#8A8F98] text-sm mt-2">
+                    {lightbox.currentIndex + 1} / {lightbox.images.length}
+                  </p>
+                )}
+              </div>
+              
+              {/* Thumbnail dots */}
+              {lightbox.images.length > 1 && (
+                <div className="mt-4 flex justify-center gap-2">
+                  {lightbox.images.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setLightbox({ ...lightbox, currentIndex: idx })}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        idx === lightbox.currentIndex ? 'bg-[#00E5CC]' : 'bg-white/30 hover:bg-white/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </Section>
+  );
+}
+
+/** ==========================================================
+ * Gallery / Moments Section
+ * ========================================================== */
+function GallerySection() {
+  const [lightbox, setLightbox] = useState<{ images: string[]; currentIndex: number; title: string; description: string } | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const nextImage = () => {
+    if (lightbox && lightbox.images.length > 1) {
+      setLightbox({
+        ...lightbox,
+        currentIndex: (lightbox.currentIndex + 1) % lightbox.images.length
+      });
+    }
+  };
+
+  const prevImage = () => {
+    if (lightbox && lightbox.images.length > 1) {
+      setLightbox({
+        ...lightbox,
+        currentIndex: (lightbox.currentIndex - 1 + lightbox.images.length) % lightbox.images.length
+      });
+    }
+  };
+
+  return (
+    <Section id="gallery">
+      <SectionHeader title="Moments & Events" subtitle="Snapshots from hackathons, conferences, and community events" />
+      
+      <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[200px] md:auto-rows-[220px] gap-4">
+        {DATA.gallery.map((item, i) => {
+          const allImages = (item as any).images || [item.image];
+          
+          return (
+            <motion.div
+              key={item.title}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className={`relative group cursor-pointer ${i === 0 ? 'col-span-2 row-span-2' : ''}`}
+              onMouseEnter={() => setHoveredIndex(i)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              onClick={() => setLightbox({ images: allImages, currentIndex: 0, title: item.title, description: item.description })}
+            >
+              <div className="relative overflow-hidden rounded-2xl h-full">
+                <img 
+                  src={item.image} 
+                  alt={item.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                
+                {/* Image count badge */}
+                {allImages.length > 1 && (
+                  <div className="absolute top-3 left-3 px-2 py-1 rounded-full bg-black/50 backdrop-blur-sm text-xs text-white flex items-center gap-1">
+                    <Camera className="w-3 h-3" />
+                    {allImages.length}
+                  </div>
+                )}
+                
+                {/* Overlay */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
+                  initial={{ opacity: 0.6 }}
+                  animate={{ opacity: hoveredIndex === i ? 1 : 0.6 }}
+                />
+                
+                {/* Content */}
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <motion.div
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: hoveredIndex === i ? 0 : 10, opacity: hoveredIndex === i ? 1 : 0.8 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <span className="text-xs text-[#00E5CC] font-medium">{item.date}</span>
+                    <h3 className={`font-semibold leading-tight mt-1 ${i === 0 ? 'text-lg md:text-xl' : 'text-sm'}`}>
+                      {item.title}
+                    </h3>
+                    {hoveredIndex === i && (
+                      <motion.p
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-[#8A8F98] mt-2 text-xs line-clamp-2"
+                      >
+                        {item.description}
+                      </motion.p>
+                    )}
+                  </motion.div>
+                </div>
+                
+                {/* Expand icon */}
+                <motion.div
+                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: hoveredIndex === i ? 1 : 0, scale: hoveredIndex === i ? 1 : 0.8 }}
+                >
+                  <svg className="w-4 h-4 text-[#00E5CC]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                  </svg>
+                </motion.div>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Lightbox Modal with Navigation */}
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setLightbox(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="relative max-w-5xl w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setLightbox(null)}
+                className="absolute -top-12 right-0 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+              
+              {/* Navigation arrows */}
+              {lightbox.images.length > 1 && (
+                <>
+                  <button
+                    onClick={prevImage}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/50 hover:bg-black/70 transition-colors z-10"
+                  >
+                    <ChevronDown className="h-6 w-6 rotate-90" />
+                  </button>
+                  <button
+                    onClick={nextImage}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/50 hover:bg-black/70 transition-colors z-10"
+                  >
+                    <ChevronDown className="h-6 w-6 -rotate-90" />
+                  </button>
+                </>
+              )}
+              
+              {/* Image */}
+              <div className="rounded-2xl overflow-hidden">
+                <img
+                  src={lightbox.images[lightbox.currentIndex]}
+                  alt={lightbox.title}
+                  className="w-full h-auto max-h-[75vh] object-contain bg-[#141418]"
+                />
+              </div>
+              
+              {/* Caption and counter */}
+              <div className="mt-4 text-center max-w-2xl mx-auto">
+                <h3 className="text-xl font-semibold">{lightbox.title}</h3>
+                <p className="text-[#8A8F98] mt-2">{lightbox.description}</p>
+                {lightbox.images.length > 1 && (
+                  <p className="text-[#00E5CC] text-sm mt-2">
+                    {lightbox.currentIndex + 1} / {lightbox.images.length}
+                  </p>
+                )}
+              </div>
+              
+              {/* Thumbnail dots */}
+              {lightbox.images.length > 1 && (
+                <div className="mt-4 flex justify-center gap-2">
+                  {lightbox.images.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setLightbox({ ...lightbox, currentIndex: idx })}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        idx === lightbox.currentIndex ? 'bg-[#00E5CC]' : 'bg-white/30 hover:bg-white/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Section>
   );
 }
@@ -1083,20 +1600,24 @@ function ContactSection() {
           </a>
           
           <div className="mt-8 flex items-center justify-center gap-4">
-            <a
-              href={DATA.contacts.github}
-              target="_blank"
-              className="p-4 rounded-full glass hover:bg-white/10 transition-colors"
-            >
-              <Github className="h-6 w-6" />
-            </a>
-            <a
-              href={DATA.contacts.linkedin}
-              target="_blank"
-              className="p-4 rounded-full glass hover:bg-white/10 transition-colors"
-            >
-              <Linkedin className="h-6 w-6" />
-            </a>
+            <Magnetic>
+              <a
+                href={DATA.contacts.github}
+                target="_blank"
+                className="p-4 rounded-full glass hover:bg-white/10 hover:ring-1 hover:ring-[#00E5CC]/30 transition-all"
+              >
+                <Github className="h-6 w-6" />
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a
+                href={DATA.contacts.linkedin}
+                target="_blank"
+                className="p-4 rounded-full glass hover:bg-white/10 hover:ring-1 hover:ring-[#00E5CC]/30 transition-all"
+              >
+                <Linkedin className="h-6 w-6" />
+              </a>
+            </Magnetic>
           </div>
           
           <div className="mt-12">
@@ -1117,15 +1638,30 @@ function ContactSection() {
  * Footer
  * ========================================================== */
 function Footer() {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer className="border-t border-white/5 py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-wrap items-center justify-between gap-4 text-sm text-[#8A8F98]">
-        <p>© {new Date().getFullYear()} Mohammed Owda. Built with Next.js & Framer Motion.</p>
-        <div className="flex items-center gap-2">
-          <kbd className="px-2 py-1 text-xs rounded bg-white/5 border border-white/10">⌘</kbd>
-          <span>+</span>
-          <kbd className="px-2 py-1 text-xs rounded bg-white/5 border border-white/10">K</kbd>
-          <span className="ml-2">to navigate</span>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-[#8A8F98]">
+          <p>© {new Date().getFullYear()} Mohammed Owda. Built with Next.js & Framer Motion.</p>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <kbd className="px-2 py-1 text-xs rounded bg-white/5 border border-white/10">⌘</kbd>
+              <span>+</span>
+              <kbd className="px-2 py-1 text-xs rounded bg-white/5 border border-white/10">K</kbd>
+              <span className="ml-2">to navigate</span>
+            </div>
+            <button
+              onClick={scrollToTop}
+              className="p-2 rounded-full glass hover:bg-white/10 hover:text-[#00E5CC] transition-all"
+              aria-label="Back to top"
+            >
+              <ChevronDown className="h-4 w-4 rotate-180" />
+            </button>
+          </div>
         </div>
       </div>
     </footer>
@@ -1137,20 +1673,40 @@ function Footer() {
  * ========================================================== */
 function Navigation() {
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+      
+      // Determine active section
+      const sections = ["about", "experience", "projects", "skills", "awards", "contact"];
+      let current = "";
+      
+      for (const section of sections) {
+        const el = document.getElementById(section);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 200) {
+            current = section;
+          }
+        }
+      }
+      setActiveSection(current);
+    };
+    
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const links = [
-    ["About", "#about"],
-    ["Experience", "#experience"],
-    ["Projects", "#projects"],
-    ["Skills", "#skills"],
-    ["Awards", "#awards"],
-    ["Contact", "#contact"],
+    ["About", "#about", "about"],
+    ["Experience", "#experience", "experience"],
+    ["Projects", "#projects", "projects"],
+    ["Skills", "#skills", "skills"],
+    ["Awards", "#awards", "awards"],
+    ["Gallery", "#gallery", "gallery"],
+    ["Contact", "#contact", "contact"],
   ];
 
   return (
@@ -1167,14 +1723,18 @@ function Navigation() {
           scrolled ? "shadow-lg" : ""
         }`}
       >
-        <a href="#" className="font-bold text-[#00E5CC] px-2">MO</a>
+        <a href="#" className="font-bold text-[#00E5CC] px-2 hover:scale-110 transition-transform">MO</a>
         
         <div className="hidden md:flex items-center gap-1 ml-4">
-          {links.map(([label, href]) => (
+          {links.map(([label, href, id]) => (
             <a
               key={label}
               href={href}
-              className="px-3 py-1.5 rounded-full text-sm text-[#8A8F98] hover:text-foreground hover:bg-white/5 transition-colors"
+              className={`px-3 py-1.5 rounded-full text-sm transition-all ${
+                activeSection === id
+                  ? "text-[#00E5CC] bg-[#00E5CC]/10"
+                  : "text-[#8A8F98] hover:text-foreground hover:bg-white/5"
+              }`}
             >
               {label}
             </a>
@@ -1199,6 +1759,7 @@ function Navigation() {
 export default function PortfolioPage() {
   return (
     <div className="min-h-screen bg-[#0D0D0F] text-[#F5F5F7]">
+      <ScrollProgress />
       <NeuralBackground />
       <CommandPalette />
       <Navigation />
@@ -1216,6 +1777,8 @@ export default function PortfolioPage() {
         <SectionConnector />
         <AwardsSection />
         <VolunteeringSection />
+        <SectionConnector />
+        <GallerySection />
         <ContactSection />
       </main>
       
