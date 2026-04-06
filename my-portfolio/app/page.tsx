@@ -239,6 +239,7 @@ const DATA = {
         { label: "Play Now", href: "https://deenduel.com" },
         { label: "GitHub Repo", href: "https://github.com/mowda2/Deen-Duel" },
       ],
+      image: "/images/deenduel-preview.png",
     },
     {
       name: "Elmadhoun Family Tree",
@@ -251,6 +252,7 @@ const DATA = {
         { label: "Visit Site", href: "https://elmadhoun.ca" },
         { label: "GitHub Repo", href: "https://github.com/mowda2/elmadhoun-family-tree" },
       ],
+      image: "/images/elmadhoun-preview.png",
     },
     {
       name: "Jordanian Culture Club Website",
@@ -263,6 +265,7 @@ const DATA = {
         { label: "Visit Site", href: "https://jordaniancultureclub.com" },
         { label: "GitHub Repo", href: "https://github.com/mowda2/jcc-website" },
       ],
+      image: "/images/jcc-preview.png",
     },
     {
       name: "Object Detection Dashboard",
@@ -311,6 +314,19 @@ const DATA = {
       links: [
         { label: "GitHub Repo", href: "https://github.com/mowda2/Vinculum.git" },
       ],
+    },
+    {
+      name: "Lara Food",
+      bullets: [
+        { title: "Brand Experience", text: "elegant UI with warm color palette and premium typography for a luxury food brand." },
+        { title: "Responsive Design", text: "mobile-first layout with smooth scroll, adaptive navigation, and hover interactions." },
+        { title: "E-Commerce Ready", text: "product showcase with intuitive ordering flow and seamless customer navigation." },
+      ],
+      tags: ["HTML", "CSS", "JavaScript", "Responsive Design"],
+      links: [
+        { label: "Visit Site", href: "https://larafood.com" },
+      ],
+      image: "/images/larafood-preview.png",
     },
   ],
 
@@ -896,7 +912,29 @@ export default function PortfolioPage() {
           {DATA.projects.map((p, i) => (
             <motion.div key={i} whileHover={{ y: -4 }} transition={{ type: "spring", stiffness: 250, damping: 18 }}>
               <TiltCard>
-                <Card className="group hover:shadow-md transition-shadow [background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015))]">
+                <Card className="group hover:shadow-md transition-shadow [background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015))] overflow-hidden">
+                  {/* Site preview image */}
+                  {(p as any).image && (
+                    <a
+                      href={p.links.find((l) => !(/github\.com/i.test(l.href)))?.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative block aspect-video bg-black/50 overflow-hidden"
+                    >
+                      <img
+                        src={(p as any).image}
+                        alt={`${p.name} preview`}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-full font-medium text-sm">
+                          <Globe className="h-4 w-4" />
+                          Visit Site
+                        </div>
+                      </div>
+                    </a>
+                  )}
+
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between gap-4">
                       <div className="w-full">
