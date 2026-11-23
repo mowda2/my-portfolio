@@ -1,1173 +1,591 @@
-"use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 
-import React from "react";
-import { motion } from "framer-motion";
-import {
-  Mail,
-  Github,
-  Linkedin,
-  Globe,
-  Briefcase,
-  Heart,
-  ExternalLink,
-  MapPin,
-  Phone,
-  Moon,
-  Sun,
-  X,
-  GraduationCap,
-  Award,
-  Sparkles,
-  Command,
-  Wand2,
-} from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ArrowUpRight, Download, Github, Linkedin, Mail, MapPin, Phone, Play } from "lucide-react";
 
-/** Types for mixed media */
-type MediaItem = {
-  type: "image" | "video";
-  src: string;
-  alt?: string;
-  poster?: string;
-};
-
-/** Award item */
-type AwardItem = {
-  title: string;
-  image: string; // path under /public
-  date?: string;
-  issuer?: string;
-  link?: string;
-};
-
-/** ==========================================================
- * DATA (unchanged structure / content)
+/* ==========================================================
+ * Content
  * ========================================================== */
-const DATA = {
+const ME = {
   name: "Mohammed Owda",
-  role: "Software Engineering @ Western University",
-  tagline:
-    "Building AI-powered platforms, real-time detection systems, and full-stack web apps for research & community impact.",
-  location: "London, ON, Canada",
-  contacts: {
-    email: "mowda2@uwo.ca",
-    phone: "+1 (226) 977-4351",
-    github: "https://github.com/mowda2",
-    linkedin: "https://www.linkedin.com/in/mohammedowda",
-    website: "https://mohammedowda.com",
-    resumeUrl: "/images/Mohammed_Owda_Resume.pdf",
-  },
+  location: "London, Ontario",
+  email: "mowda2@uwo.ca",
+  phone: "+1 (226) 977-4351",
+  github: "https://github.com/mowda2",
+  linkedin: "https://www.linkedin.com/in/mohammedowda",
+  resume: "/Mohammed_Owda_Resume.pdf",
+};
 
-  /** Education block (shown in hero) */
-  education: {
-    school: "Western University",
-    program: "BESc Software Engineering",
-    year: "Year 3",
-    timeline: "2023 – 2027",
-    items: [
-      {
-        label: "Dean’s Honour List",
-        role: "CGPA 85%",
-        when: "2024–2025",
-      },
-      {
-        label: "RBC Design Thinking Fellow",
-        role: "Built & pitched Canon Health to Dean of Engineering",
-        when: "2025",
-      },
-      {
-        label: "Chorley & Bisset Award · MacKay-Lassonde Award",
-        role: "Recipient",
-        when: "",
-      },
+const NOW = [
+  {
+    label: "Working",
+    value: "Software Developer co-op",
+    detail: "Libro Credit Union, 2026 to present",
+  },
+  {
+    label: "Latest",
+    value: "4th place, QNX hardware stream",
+    detail: "Hack Western 13, November 2026",
+  },
+  {
+    label: "Studying",
+    value: "BESc Software Engineering",
+    detail: "Western University, 85% average, Dean's Honour List",
+  },
+];
+
+type Job = {
+  title: string;
+  org: string;
+  when: string;
+  points: string[];
+  photos?: { src: string; alt: string }[];
+  link?: { label: string; href: string };
+};
+
+const EXPERIENCE: Job[] = [
+  {
+    title: "Software Developer (Co-op)",
+    org: "Libro Credit Union",
+    when: "2026 – Present",
+    points: [
+      "Build and maintain C#/.NET microservices and REST APIs behind Libro's digital-banking e-Transfer features.",
+      "Helped validate and roll out a .NET 10 upgrade of a payments microservice: smoke testing, dependency conflicts, and build-and-deploy pipelines.",
+      "Work in two-week agile sprints with pull-request reviews, SQL Server, and close collaboration with QA.",
     ],
   },
+  {
+    title: "Undergraduate Research Assistant",
+    org: "Intelligent/Autonomous Systems Lab, Western University",
+    when: "May 2025 – Present",
+    points: [
+      "Built a multi-view AI dashboard with real-time YOLO detection overlays and structured event logging across live camera feeds.",
+      "Engineered a modular ROS 2 pipeline for multi-camera discovery, detection publishing, and synchronized overlays.",
+    ],
+    photos: [{ src: "/photos/detection-dashboard.jpg", alt: "Detection dashboard analysing a street scene" }],
+    link: { label: "Watch the dashboard demo", href: "/videos/Dashboard%20Demo.mp4" },
+  },
+  {
+    title: "Design Thinking Fellow",
+    org: "RBC Design Thinking Program",
+    when: "Sept – Dec 2025",
+    points: [
+      "Designed Canon Health, a platform for secure patient–provider document exchange, from user research into workflow gaps.",
+      "Wrote the business case and pitched the prototype to the Dean of Engineering.",
+    ],
+    photos: [{ src: "/photos/rbc-pitch.jpg", alt: "Pitching Canon Health to an audience" }],
+  },
+  {
+    title: "Sales Representative",
+    org: "DECO Windshield Repair",
+    when: "2024",
+    points: ["Generated $13K+ in revenue through customer engagement and upselling."],
+  },
+];
 
-  skills: [
-    "Python",
-    "TypeScript",
-    "C/C++",
-    "Java",
-    "SQL",
-    "Bash",
-    "React",
-    "Next.js",
-    "Node.js",
-    "FastAPI",
-    "Flask",
-    "TailwindCSS",
-    "ROS 2",
-    "YOLOv26",
-    "OpenCV",
-    "TensorRT",
-    "PostgreSQL",
-    "Docker",
-    "AWS",
-    "Git",
-    "Linux",
-    "Vercel",
-  ],
-
-  experience: [
-    {
-      org: "Western University – Intelligent/Autonomous Systems Lab",
-      title: "Undergraduate Research Assistant",
-      start: "May 2025",
-      end: "Present",
-      points: [
-        "Built a multi-view AI dashboard with YOLOv26 overlays, ROS 2 data pipelines, and structured event logging across live camera feeds.",
-        "Engineered a ROS 2 multi-camera pipeline for modular detection publishing, synchronized overlays, and reproducible data collection.",
-      ],
-      media: [
-        {
-          type: "video",
-          src: "/videos/Dashboard Demo.mp4",
-          poster: "/images/videoAnalyzed.jpg",
-          alt: "Dashboard demo clip",
-        },
-        { type: "image", src: "/images/videoAnalyzed.png", alt: "Dashboard UI" },
-      ],
-      images: [],
-    },
-    {
-      org: "RBC",
-      title: "Design Thinking Fellow",
-      start: "Sep 2025",
-      end: "Present",
-      points: [
-        "Explored AI and emerging tech use cases in financial services through the RBC Design Thinking Program.",
-        "Built and pitched Canon Health prototype to the Dean of Engineering.",
-      ],
-      images: ["/images/rbc-pitch-wide.jpg", "/images/rbc-pitch-presenting.jpg", "/images/rbc-pitch-closeup.jpg"],
-      links: [],
-    },
-    {
-      org: "Western Engineering Competition (WEC)",
-      title: "VP Technical Operations",
-      start: "Mar 2025",
-      end: "Present",
-      points: [
-        "Delivered digital infrastructure (website, LMS) for 650+ registrants; authored technical handoff documentation and training for successor VPs.",
-      ],
-      images: ["/images/wechome.png", "/images/wec-team-group.jpg", "/images/wec-audience.jpg", "/images/wec-team-standing.jpg"],
-      links: [
-        { label: "Visit website", href: "https://www.westernengineeringcompetition.ca/" },
-      ],
-    },
-    {
-      org: "DECO Windshield Repair",
-      title: "Sales Representative",
-      start: "Mar 2024",
-      end: "Sept 2024",
-      points: [
-        "Generated $15K+ in revenue through customer engagement, upselling, and CRM management.",
-      ],
-      images: ["/images/decoPic.PNG"],
-      links: [],
-    },
-  ],
-
-  volunteering: [
-    {
-      org: "Engineers Without Borders (Western Chapter)",
-      role: "VP of Projects",
-      when: "Sept 2023 – Present",
-      desc: "Led STEM workshops for 200+ youth; co-organized a Sustainability Hackathon with 100+ participants.",
-      images: ["/images/ewb-1.PNG", "/images/ewb-2.PNG"],
-    },
-    {
-      org: "Western Foot Patrol",
-      role: "Operations Manager",
-      when: "Sept 2023 – Present",
-      desc: "Coordinated volunteer scheduling and introduced shift-reporting automation to streamline campus safety logistics.",
-      images: ["/images/footpatrol-1.jpg"],
-    },
-    {
-      org: "Undergraduate Engineering Society (UES)",
-      role: "Sustainability Director of Outreach",
-      when: "Sept 2024 – Present",
-      desc: "Organized sustainability hackathons, workshops, and case competitions for engineering students.",
-      images: ["/images/sustain-1.png", "/images/sustainability-2.jpg"],
-    },
-    {
-      org: "Canadian Engineering Leadership Competition (CELC)",
-      role: "Director of Finance",
-      when: "2025",
-      desc: "Managed budgeting and sponsorship coordination for national engineering leadership conference.",
-      images: ["/images/CELC-1.jpeg"],
-    },
-    {
-      org: "Kurdish Club (Western)",
-      role: "Vice President",
-      when: "2025 – Present",
-      desc: "Community building, cultural programming, and campus partnerships.",
-      images: ["/images/kurdpic-1.PNG"],
-    },
-    {
-      org: "Jordanian Culture Club (Western)",
-      role: "VP Outreach (Sponsorship & Club Outreach)",
-      when: "2025 – Present",
-      desc: "Coordinated sponsorships and cross-club collaborations to expand event reach. Also sole developer of the club website.",
-      images: ["/images/jcc.jpg"],
-    },
-  ],
-
-  projects: [
-    {
-      name: "TrafficIQ — AI Traffic Analytics Platform",
-      bullets: [
-        { title: "Computer Vision", text: "converts traffic video into turning-movement counts and speed studies for client stakeholders." },
-        { title: "Full-Stack Pipeline", text: "FastAPI backend and React dashboard integrating YOLOv26 detection and tracking across varied deployment conditions." },
-      ],
-      tags: ["Python", "YOLOv26", "OpenCV", "FastAPI", "React", "PostgreSQL"],
-      links: [],
-    },
-    {
-      name: "DeenDuel — Islamic Knowledge Duels",
-      bullets: [
-        { title: "Real-time Multiplayer", text: "challenge friends to Islamic trivia duels across Quran, Seerah, Fiqh & more." },
-        { title: "Game Modes", text: "quick match, private rooms with QR codes, daily challenges, and AI-powered study tools." },
-        { title: "Full Platform", text: "leaderboards, game history, custom quiz creation, flashcards, and lesson builder." },
-      ],
-      tags: ["React", "Node.js", "Socket.io", "Supabase", "Anthropic AI", "PWA"],
-      links: [
-        { label: "Play Now", href: "https://deenduel.com" },
-        { label: "GitHub Repo", href: "https://github.com/mowda2/Deen-Duel" },
-      ],
-      image: "/images/deenduel-preview.png",
-    },
-    {
-      name: "Elmadhoun Family Tree",
-      bullets: [
-        { title: "Bilingual Platform", text: "interactive family tree with Arabic + English support for 1,300+ records across Palestine and the diaspora." },
-        { title: "Smart Navigation", text: "authentication, branch navigation, keyword search, and hierarchical tree rendering." },
-      ],
-      tags: ["Next.js", "React", "PostgreSQL", "Prisma", "REST API"],
-      links: [
-        { label: "Visit Site", href: "https://elmadhoun.ca" },
-        { label: "GitHub Repo", href: "https://github.com/mowda2/elmadhoun-family-tree" },
-      ],
-      image: "/images/elmadhoun-preview.png",
-    },
-    {
-      name: "Jordanian Culture Club Website",
-      bullets: [
-        { title: "Live Production", text: "event listings, sponsor directory, executive profiles, photo gallery, and membership flow." },
-        { title: "Deployed & Maintained", text: "responsive layouts on Vercel with streamlined club content flows." },
-      ],
-      tags: ["Next.js", "React", "Tailwind CSS", "Vercel"],
-      links: [
-        { label: "Visit Site", href: "https://jordaniancultureclub.com" },
-        { label: "GitHub Repo", href: "https://github.com/mowda2/jcc-website" },
-      ],
-      image: "/images/jcc-preview.png",
-    },
-    {
-      name: "Object Detection Dashboard",
-      bullets: [
-        { title: "ROS Live Pipeline", text: "stream and analyze real-time camera feeds with ROS 2 integration." },
-        { title: "Offline Analysis", text: "upload videos for object detection and automated batch processing." },
-        { title: "Library System", text: "store, organize, and revisit past analyses with saved results and metadata." },
-      ],
-      tags: ["Next.js", "FastAPI", "WebSockets", "OpenCV", "YOLO", "Docker"],
-      links: [
-        { label: "GitHub Repo", href: "https://github.com/mowda2/Object-Detection-Dashboard" },
-      ],
-    },
-    {
-      name: "Thermal Road-User Detection — GM Challenge Winner",
-      bullets: [
-        { title: "Thermal Sensing", text: "privacy-preserving road-user detection using thermal imagery for day/night conditions." },
-        { title: "Edge Optimization", text: "YOLOv11 pruned + FP16; ONNX + NCNN with a C++ pipeline on Raspberry Pi 5." },
-        { title: "Federated Learning", text: "Flower-based FL so sites share model updates—not raw footage—plus on-device results." },
-      ],
-      tags: ["Thermal", "Raspberry Pi 5", "YOLOv11", "ONNX", "NCNN", "Federated Learning", "C++"],
-      links: [
-        { label: "GitHub Repo", href: "https://github.com/BenjaminNamayandev/AIC-GM-Comp2025" },
-      ],
-    },
-    {
-      name: "QCare – ER Virtual Waiting Room",
-      bullets: [
-        { title: "AI-Assisted Triage", text: "CTAS-inspired severity scoring with automated intake and reassessments." },
-        { title: "Clinician Dashboard", text: "live queue view, status changes, and auto-escalation for high-risk patients." },
-        { title: "Structured Records", text: "secure data flow with templated notes and audit-ready logs." },
-      ],
-      tags: ["React", "Flask", "SQLAlchemy", "OpenAI", "PostgreSQL"],
-      links: [
-        { label: "GitHub Repo", href: "https://github.com/omarHossain123/msa_hack.git" },
-      ],
-    },
-    {
-      name: "Vinculum – Real-time Collaborative Web App",
-      bullets: [
-        { title: "Shared Presence", text: "multi-user 2D space with synchronized avatars and cursor trails." },
-        { title: "Live Comms", text: "WebRTC voice chat and WebSocket-driven room state." },
-        { title: "Fast Rendering", text: "Pixi.js canvas with smooth animations and efficient updates." },
-      ],
-      tags: ["React", "Node.js", "WebSockets", "WebRTC", "Pixi.js"],
-      links: [
-        { label: "GitHub Repo", href: "https://github.com/mowda2/Vinculum.git" },
-      ],
-    },
-    {
-      name: "Lara Food",
-      bullets: [
-        { title: "Brand Experience", text: "elegant UI with warm color palette and premium typography for a luxury food brand." },
-        { title: "Responsive Design", text: "mobile-first layout with smooth scroll, adaptive navigation, and hover interactions." },
-        { title: "E-Commerce Ready", text: "product showcase with intuitive ordering flow and seamless customer navigation." },
-      ],
-      tags: ["HTML", "CSS", "JavaScript", "Responsive Design"],
-      links: [
-        { label: "Visit Site", href: "https://larafood.com" },
-      ],
-      image: "/images/larafood-preview.png",
-    },
-  ],
-
-  awards: [
-    {
-      title: "1st – Western Engineering Automotive Innovation Challenge (GM & OVIN)",
-      image: "/images/inovchallenge.PNG",
-      issuer: "Western Engineering / GM & OVIN",
-    },
-    {
-      title: "1st – Western MSA Hackathon (SinaAI Stream) – QCare",
-      image: "/images/MsaHack.PNG",
-      issuer: "Western MSA",
-    },
-    {
-      title: "1st – HackWestern (Canada Life Stream) – Vinculum",
-      image: "/images/HackWestern.PNG",
-      issuer: "HackWestern",
-    },
-    {
-      title: "2nd – Stupid Hackathon 2025",
-      image: "/images/stupid-hack-presenting.jpg",
-      issuer: "Stupid Hackathon",
-    },
-    {
-      title: "Dean’s Honour List (2024–2025)",
-      image: "/images/Deanshonorlistr.png",
-      issuer: "Western University",
-    },
-  ] as AwardItem[],
+type Result = {
+  place: string;
+  event: string;
+  project?: string;
+  text?: string;
+  photo: string;
+  alt: string;
+  href?: string;
 };
 
-/** ==========================================================
- * Little Utilities & UI bits
+const RESULTS: Result[] = [
+  {
+    place: "1st",
+    event: "Western Engineering Automotive Innovation Challenge (GM & OVIN)",
+    project: "Thermal Road-User Detection",
+    text: "Privacy-preserving day and night detection from thermal imagery, running a pruned YOLOv11 model in a C++ pipeline on a Raspberry Pi 5, with federated learning so sites share model updates instead of footage.",
+    photo: "/photos/gm-ovin-challenge.jpg",
+    alt: "Team holding certificates at the GM and OVIN innovation challenge",
+    href: "https://github.com/BenjaminNamayandev/AIC-GM-Comp2025",
+  },
+  {
+    place: "1st",
+    event: "Hack Western, Canada Life stream",
+    project: "Vinculum",
+    text: "A real-time collaborative 2D space with synchronized avatars, WebSocket room state, and WebRTC voice chat.",
+    photo: "/photos/hack-western-vinculum.jpg",
+    alt: "Team presenting Vinculum at Hack Western",
+    href: "https://github.com/mowda2/Vinculum",
+  },
+  {
+    place: "1st",
+    event: "Western MSA Hackathon, SinaAI stream",
+    project: "QCare",
+    text: "An ER virtual waiting room with AI-assisted triage and a live clinician dashboard that escalates high-risk patients.",
+    photo: "/photos/msa-hacks-qcare.jpg",
+    alt: "Team at MSA Hacks",
+    href: "https://github.com/omarHossain123/msa_hack",
+  },
+  {
+    place: "2nd",
+    event: "Stupid Hackathon 2025",
+    photo: "/photos/stupid-hackathon.jpg",
+    alt: "Presenting at the Stupid Hackathon",
+  },
+];
+
+type Project = {
+  name: string;
+  text: string;
+  stack: string;
+  links: { label: string; href: string }[];
+};
+
+const PROJECTS: Project[] = [
+  {
+    name: "DeenDuel",
+    text: "A live multiplayer quiz platform with private QR rooms, daily challenges, leaderboards, and AI study tools.",
+    stack: "React, Node.js, Socket.io, Supabase",
+    links: [{ label: "deenduel.com", href: "https://deenduel.com" }],
+  },
+  {
+    name: "TrafficIQ",
+    text: "Turns traffic video into turning-movement counts and speed studies using detection and multi-object tracking.",
+    stack: "Python, YOLO, OpenCV, FastAPI, React, PostgreSQL",
+    links: [],
+  },
+  {
+    name: "Elmadhoun Family Tree",
+    text: "A bilingual Arabic and English genealogy platform preserving 1,300+ records, with search and branch navigation.",
+    stack: "Next.js, PostgreSQL, Prisma",
+    links: [{ label: "elmadhoun.ca", href: "https://elmadhoun.ca" }],
+  },
+  {
+    name: "Jordanian Culture Club",
+    text: "The club's production site: events, sponsors, executive profiles, gallery, and membership. Built and maintained solo.",
+    stack: "Next.js, Tailwind CSS, Vercel",
+    links: [
+      { label: "jordaniancultureclub.com", href: "https://jordaniancultureclub.com" },
+      { label: "Code", href: "https://github.com/mowda2/jcc-website" },
+    ],
+  },
+  {
+    name: "Object Detection Dashboard",
+    text: "Streams live ROS 2 camera feeds, analyses uploaded video offline, and keeps a library of past results.",
+    stack: "Next.js, FastAPI, WebSockets, YOLO, Docker",
+    links: [],
+  },
+  {
+    name: "Lara Food",
+    text: "A responsive storefront site for a food brand, built mobile-first.",
+    stack: "HTML, CSS, JavaScript",
+    links: [{ label: "larafood.com", href: "https://larafood.com" }],
+  },
+];
+
+const LEADERSHIP = [
+  {
+    role: "President",
+    org: "Jordanian Culture Club, Western",
+    when: "2025 – Present",
+    text: "Lead the executive team and club operations. Previously VP Outreach, managing partnerships with 20+ organizations.",
+  },
+  {
+    role: "VP Technical Operations",
+    org: "Western Engineering Competition",
+    when: "Mar 2025 – Present",
+    text: "Delivered the website and LMS for 650+ registrants, and wrote handoff documentation and training for successor VPs.",
+  },
+  {
+    role: "VP Projects",
+    org: "Engineers Without Borders, Western",
+    when: "Sept 2023 – Present",
+    text: "Led STEM workshops for 200+ youth and co-organized a Sustainability Hackathon with 100+ participants.",
+  },
+  {
+    role: "Sustainability Director of Outreach",
+    org: "Undergraduate Engineering Society",
+    when: "2024 – Present",
+    text: "Organize sustainability hackathons, workshops, and case competitions for engineering students.",
+  },
+  {
+    role: "Operations Manager",
+    org: "Western Foot Patrol",
+    when: "2023 – Present",
+    text: "Coordinate volunteer scheduling for the campus safe-walk service.",
+  },
+  {
+    role: "Vice President",
+    org: "Kurdish Club, Western",
+    when: "2025 – Present",
+    text: "Cultural programming and campus partnerships.",
+  },
+  {
+    role: "Director of Finance",
+    org: "Canadian Engineering Leadership Competition",
+    when: "2025",
+    text: "Managed budgeting and sponsorship coordination for the national conference.",
+  },
+];
+
+const LEADERSHIP_PHOTOS = [
+  { src: "/photos/wec-team.jpg", alt: "Western Engineering Competition organizing team" },
+  { src: "/photos/jcc.jpg", alt: "Jordanian Culture Club event" },
+  { src: "/photos/ewb.jpg", alt: "Engineers Without Borders volunteers" },
+];
+
+const SKILLS = [
+  { group: "Languages", items: "C#, JavaScript, TypeScript, SQL (T-SQL, PostgreSQL), Python, Java, C/C++, HTML, CSS, Bash" },
+  { group: "Back end", items: ".NET (ASP.NET Core Web API, Entity Framework Core, Azure Functions), Node.js, Express, FastAPI, Flask" },
+  { group: "Front end", items: "React, Next.js, Tailwind CSS, Vite" },
+  { group: "Data and cloud", items: "SQL Server, PostgreSQL, Supabase, Azure, AWS (EC2, S3), Docker, REST APIs, WebSockets" },
+  { group: "Practice", items: "Agile and Scrum, Azure DevOps, Git, pull-request review, CI/CD, technical documentation" },
+  { group: "Vision and robotics", items: "YOLO, OpenCV, ROS 2, ONNX, NCNN, federated learning (Flower)" },
+];
+
+const NAV = [
+  ["Experience", "#experience"],
+  ["Hackathons", "#hackathons"],
+  ["Projects", "#projects"],
+  ["Leadership", "#leadership"],
+  ["Skills", "#skills"],
+  ["Contact", "#contact"],
+];
+
+/* ==========================================================
+ * Building blocks
  * ========================================================== */
-function useTheme() {
-  const [dark, setDark] = React.useState(true);
-  React.useEffect(() => {
-    if (typeof document !== "undefined")
-      document.documentElement.classList.toggle("dark", dark);
-  }, [dark]);
-  return { dark, setDark } as const;
-}
-
-const Section = ({
-  id,
-  title,
-  subtitle,
-  children,
-}: {
-  id: string;
-  title: string;
-  subtitle?: string;
-  children: React.ReactNode;
-}) => (
-  <section id={id} className="py-16 sm:py-24">
-    <div className="max-w-6xl mx-auto px-4">
-      <div className="mb-8 sm:mb-12">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight flex items-center gap-2">
-          <Sparkles className="h-5 w-5" /> {title}
-        </h2>
-        {subtitle && <p className="text-muted-foreground mt-1">{subtitle}</p>}
-        {/* gradient underline */}
-        <div className="mt-3 h-1 w-24 rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-emerald-500" />
-      </div>
-      {children}
-    </div>
-  </section>
-);
-
-/* Colorful pill that supports inline gradients */
-const Pill = ({
-  children,
-  style,
-}: {
-  children: React.ReactNode;
-  style?: React.CSSProperties;
-}) => (
-  <span
-    style={style}
-    className="px-4 py-1.5 rounded-full text-sm border border-white/10 shadow-[inset_0_0_1px_rgba(255,255,255,.18)] hover:shadow hover:translate-y-[-1px] transition"
-  >
-    {children}
-  </span>
-);
-
-/** Lightweight lightbox */
-function Lightbox({
-  open,
-  src,
-  alt,
-  onClose,
-}: {
-  open: boolean;
-  src: string;
-  alt?: string;
-  onClose: () => void;
-}) {
-  if (!open) return null;
+function Section({ id, title, note, children }: { id: string; title: string; note?: string; children: React.ReactNode }) {
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-    >
-      <button
-        aria-label="Close"
-        className="absolute top-4 right-4 rounded-full border bg-background/80 p-2"
-        onClick={(e) => {
-          e.stopPropagation();
-          onClose();
-        }}
-      >
-        <X className="h-5 w-5" />
-      </button>
-      <div className="h-full w-full flex items-center justify-center p-4">
-        <img
-          src={src}
-          alt={alt || "image preview"}
-          className="max-h-[90vh] max-w-[92vw] rounded-xl shadow-2xl"
-          onClick={(e) => e.stopPropagation()}
-        />
+    <section id={id} className="border-t border-line">
+      <div className="mx-auto grid max-w-6xl gap-x-12 gap-y-8 px-5 py-16 sm:px-8 lg:grid-cols-[13rem_1fr] lg:py-24">
+        <div>
+          <h2 className="text-3xl font-semibold lg:sticky lg:top-24">{title}</h2>
+          {note ? <p className="mt-3 text-sm text-muted lg:sticky lg:top-36">{note}</p> : null}
+        </div>
+        <div>{children}</div>
       </div>
-    </div>
+    </section>
   );
 }
 
-/** Skills marquee (looping) + edge fades + colorful chips */
-function SkillsMarquee({ items }: { items: string[] }) {
-  const row = [...items, ...items, ...items]; // smooth loop
-
-  const grad = (i: number) => {
-    const g = [
-      "linear-gradient(90deg, rgba(99,102,241,.28), rgba(56,189,248,.28))",   // indigo → sky
-      "linear-gradient(90deg, rgba(236,72,153,.28), rgba(34,197,94,.28))",    // pink → green
-      "linear-gradient(90deg, rgba(250,204,21,.30), rgba(99,102,241,.28))",   // amber → indigo
-      "linear-gradient(90deg, rgba(59,130,246,.28), rgba(16,185,129,.28))",   // blue → emerald
-    ];
-    return g[i % g.length];
-  };
-
+function TextLink({ href, children }: { href: string; children: React.ReactNode }) {
+  const external = href.startsWith("http");
   return (
-    <div className="relative overflow-hidden py-6">
-      {/* Edge fades for nicer crop */}
-      <div className="pointer-events-none absolute left-0 top-0 h-full w-24 bg-gradient-to-r from-background to-transparent" />
-      <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-background to-transparent" />
-      <motion.div
-        className="flex gap-3 will-change-transform"
-        aria-hidden
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ repeat: Infinity, duration: 22, ease: "linear" }}
-      >
-        {row.map((s, i) => (
-          <Pill
-            key={i}
-            style={{
-              background: grad(i),
-              boxShadow:
-                "0 1px 0 rgba(255,255,255,.08) inset, 0 10px 30px rgba(99,102,241,.10)",
-            }}
-          >
-            {s}
-          </Pill>
-        ))}
-      </motion.div>
-    </div>
-  );
-}
-
-/** Tilt Card (playful perspective on hover) */
-function TiltCard({ children }: { children: React.ReactNode }) {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const onMove = (e: React.MouseEvent) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const rx = ((y / rect.height) - 0.5) * -8;
-    const ry = ((x / rect.width) - 0.5) * 8;
-    el.style.setProperty("--rx", `${rx}deg`);
-    el.style.setProperty("--ry", `${ry}deg`);
-  };
-  const reset = () => {
-    const el = ref.current;
-    if (!el) return;
-    el.style.setProperty("--rx", "0deg");
-    el.style.setProperty("--ry", "0deg");
-  };
-  return (
-    <div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={reset}
-      className="[transform:perspective(800px)_rotateX(var(--rx))_rotateY(var(--ry))] transition-transform duration-150"
+    <a
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      className="inline-flex items-center gap-1 font-medium text-signal underline decoration-signal/30 hover:decoration-signal"
     >
       {children}
-    </div>
+      {external ? <ArrowUpRight className="h-4 w-4" aria-hidden /> : null}
+    </a>
   );
 }
 
-/** Tiny confetti helper (no hard dependency — safe fallback) */
-function useConfetti() {
-  const fire = React.useCallback(async () => {
-    try {
-      const mod = await import("canvas-confetti");
-      const c = mod.default;
-      c?.({ particleCount: 140, spread: 70, origin: { y: 0.2 } });
-    } catch {
-      // graceful no-op if library not installed
-    }
-  }, []);
-  return fire;
-}
-
-/** Command Palette (⌘K / Ctrl+K) */
-function CommandK() {
-  const [open, setOpen] = React.useState(false);
-  const [q, setQ] = React.useState("");
-  React.useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const isMac = navigator.platform.toUpperCase().includes("MAC");
-      if ((isMac && e.metaKey && e.key.toLowerCase() === "k") || (!isMac && e.ctrlKey && e.key.toLowerCase() === "k")) {
-        e.preventDefault();
-        setOpen((v) => !v);
-      }
-      if (e.key === "Escape") setOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  const items = [
-    { label: "Experience", href: "#experience" },
-    { label: "Projects", href: "#projects" },
-    { label: "Volunteering", href: "#volunteering" },
-    { label: "Skills", href: "#skills" },
-    { label: "Awards", href: "#awards" },
-    { label: "Contact", href: "#contact" },
-    { label: "Download Resume", href: DATA.contacts.resumeUrl },
-  ];
-  const filtered = items.filter((i) => i.label.toLowerCase().includes(q.toLowerCase()));
-
-  if (!open) return null;
-  return (
-    <div className="fixed inset-0 z-50 grid place-items-start sm:place-items-center p-4 bg-black/40 backdrop-blur-sm" onClick={() => setOpen(false)}>
-      <div className="w-full max-w-lg rounded-2xl border bg-background/95 shadow-xl" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center gap-2 p-3 border-b">
-          <Command className="h-4 w-4" />
-          <Input autoFocus placeholder="Type to jump… (esc to close)" value={q} onChange={(e) => setQ(e.target.value)} />
-        </div>
-        <div className="max-h-72 overflow-auto p-2">
-          {filtered.map((i) => (
-            <a key={i.label} href={i.href} className="block rounded-lg px-3 py-2 hover:bg-muted">
-              {i.label}
-            </a>
-          ))}
-          {!filtered.length && (
-            <div className="text-sm text-muted-foreground px-3 py-4">No results. Try “Projects”.</div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/** Experience timeline dot */
-function Dot() {
-  return (
-    <span className="absolute left-[-10px] top-2 h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_0_4px_rgba(99,102,241,0.18)]" />
-  );
-}
-
-/** ==========================================================
- * Main Page
+/* ==========================================================
+ * Page
  * ========================================================== */
 export default function PortfolioPage() {
-  const { dark, setDark } = useTheme();
-  const [lb, setLB] = React.useState<{ src: string; alt?: string } | null>(null);
-  const confetti = useConfetti();
-
-  React.useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setLB(null);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
-      {/* Colorful background: richer blobs + soft grid */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(30rem_30rem_at_30%_-10%,rgba(99,102,241,0.22),transparent),radial-gradient(36rem_36rem_at_75%_110%,rgba(16,185,129,0.18),transparent),radial-gradient(28rem_28rem_at_10%_80%,rgba(14,165,233,0.16),transparent)]" />
-        <div className="absolute inset-0 opacity-[0.08] [background:linear-gradient(to_right,transparent_0,transparent_calc(100%-1px),hsl(var(--foreground))_calc(100%-1px)),linear-gradient(to_bottom,transparent_0,transparent_calc(100%-1px),hsl(var(--foreground))_calc(100%-1px))] [background-size:24px_24px]" />
-      </div>
+    <div className="min-h-screen">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-ink focus:px-4 focus:py-2 focus:text-white"
+      >
+        Skip to content
+      </a>
 
-      {/* Command Palette */}
-      <CommandK />
-
-      {/* NAV — colorful glass dock */}
-      <header className="sticky top-3 z-40">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="rounded-full border bg-background/70 backdrop-blur shadow-sm flex items-center gap-2 px-2 py-2 ring-1 ring-white/5">
-            <div className="px-3 font-semibold tracking-tight"> 
-              <span className="bg-gradient-to-r from-indigo-400 via-sky-400 to-emerald-400 bg-clip-text text-transparent">
-                {DATA.name}
-              </span>
-            </div>
-            <nav className="ml-auto hidden sm:flex items-center gap-1 text-sm">
-              {[
-                ["Experience", "#experience"],
-                ["Projects", "#projects"],
-                ["Volunteering", "#volunteering"],
-                ["Skills", "#skills"],
-                ["Awards", "#awards"],
-                ["Contact", "#contact"],
-              ].map(([label, href]) => (
-                <a key={label} href={href} className="px-3 py-1.5 rounded-full hover:bg-muted">
-                  {label}
-                </a>
-              ))}
-            </nav>
-            <Button size="icon" variant="ghost" aria-label="Toggle theme" onClick={() => setDark(!dark)}>
-              {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </Button>
-            <a href={DATA.contacts.resumeUrl} className="hidden sm:inline-flex">
-              <Button className="gap-1"><Wand2 className="h-4 w-4" /> Resume</Button>
-            </a>
-          </div>
-          <div className="mt-2 text-xs text-muted-foreground">Press <kbd className="px-1 py-0.5 rounded bg-muted">⌘</kbd>+<kbd className="px-1 py-0.5 rounded bg-muted">K</kbd> to jump</div>
-        </div>
-      </header>
-
-      {/* HERO */}
-      <div className="relative">
-        <div className="max-w-6xl mx-auto px-4 pt-10 sm:pt-16">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="grid lg:grid-cols-3 gap-8 lg:gap-10 items-start"
-          >
-            {/* Left: intro + actions */}
-            <div className="lg:col-span-2">
-              <h1 className="text-3xl sm:text-5xl font-bold tracking-tight flex items-center gap-3">
-                {DATA.name}
-                <span className="inline-block animate-bounce">👋</span>
-              </h1>
-              <p className="mt-3 text-lg text-muted-foreground">{DATA.role}</p>
-              <p className="mt-4 leading-relaxed max-w-2xl">{DATA.tagline}</p>
-
-              <div className="mt-6 flex flex-wrap items-center gap-3">
-                <a href={DATA.contacts.github} target="_blank" className="inline-flex items-center gap-2">
-                  <Button variant="secondary">
-                    <Github className="h-4 w-4" /> GitHub
-                  </Button>
-                </a>
-                <a href={DATA.contacts.linkedin} target="_blank" className="inline-flex items-center gap-2">
-                  <Button variant="secondary">
-                    <Linkedin className="h-4 w-4" /> LinkedIn
-                  </Button>
-                </a>
-                {DATA.contacts.website && (
-                  <a href={DATA.contacts.website} target="_blank" className="inline-flex items-center gap-2">
-                    <Button variant="secondary">
-                      <Globe className="h-4 w-4" /> Website
-                    </Button>
-                  </a>
-                )}
-              </div>
-
-              <div className="mt-6 flex flex-wrap gap-3 text-sm text-muted-foreground">
-                <span className="inline-flex items-center gap-1">
-                  <MapPin className="h-4 w-4" />
-                  {DATA.location}
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <Mail className="h-4 w-4" />
-                  {DATA.contacts.email}
-                </span>
-                <span className="inline-flex items-center gap-1">
-                  <Phone className="h-4 w-4" />
-                  {DATA.contacts.phone}
-                </span>
-              </div>
-
-              {/* Highlights card with gradient border wrapper */}
-              <div className="mt-8 rounded-2xl p-[1px] bg-gradient-to-r from-indigo-500/40 via-fuchsia-500/40 to-emerald-500/40">
-                <Card className="border-dashed rounded-[1rem] [background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015))]">
-                  <CardContent className="p-6">
-                    <h3 className="font-semibold flex items-center gap-2">
-                      <Briefcase className="h-5 w-5" /> Highlights
-                    </h3>
-                    <ul className="mt-3 space-y-2 list-disc list-inside text-sm">
-                      <li>Real-time YOLOv26 detection on multi-camera ROS 2 pipelines for research & traffic analytics.</li>
-                      <li>Live production sites: elmadhoun.ca, jordaniancultureclub.com, deenduel.com.</li>
-                      <li>Full-stack apps with FastAPI, Next.js, Socket.io, Supabase, and more.</li>
-                    </ul>
-                    <div className="mt-4 flex gap-2">
-                      <a href="#projects">
-                        <Button>See Projects</Button>
-                      </a>
-                      <Button variant="secondary" onClick={confetti}>
-                        Celebrate <Sparkles className="h-4 w-4 ml-1" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            {/* Right: headshot + education */}
-            <div className="grid grid-rows-[auto_auto] gap-4">
-              <TiltCard>
-                <Card className="overflow-hidden ring-1 ring-border/60 [background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015))]">
-                  <div className="relative">
-                    <img src="/images/Headshot.jpg" alt="Mohammed Owda headshot" className="w-full h-64 object-cover" />
-                    <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-                      <div className="text-white text-sm">Hi, I’m Mohammed</div>
-                      <div className="text-white/90 text-xs">Software Engineering @ Western</div>
-                    </div>
-                  </div>
-                  <CardContent className="p-4">
-                    <div className="grid grid-cols-3 gap-2 text-center">
-                      <div className="rounded-xl border p-3">
-                        <div className="text-xs text-muted-foreground">Year</div>
-                        <div className="font-semibold">{DATA.education.year}</div>
-                      </div>
-                      <div className="rounded-xl border p-3">
-                        <div className="text-xs text-muted-foreground">Program</div>
-                        <div className="font-semibold">Software Eng.</div>
-                      </div>
-                      <div className="rounded-xl border p-3">
-                        <div className="text-xs text-muted-foreground">School</div>
-                        <div className="font-semibold">Western</div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TiltCard>
-
-              <Card className="ring-1 ring-border/60 [background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015))]">
-                <CardContent className="p-5">
-                  <div className="flex items-start gap-2">
-                    <GraduationCap className="h-5 w-5 mt-0.5" />
-                    <div>
-                      <h3 className="font-semibold">Education</h3>
-                      <div className="text-sm mt-1">
-                        <div className="font-medium">
-                          {DATA.education.program} — {DATA.education.year}
-                        </div>
-                        <div className="text-muted-foreground">
-                          {DATA.education.school} · {DATA.education.timeline}
-                        </div>
-                      </div>
-
-                      <div className="mt-3 space-y-1">
-                        {DATA.education.items.map((e: any, i: number) => (
-                          <div key={i} className="text-sm">
-                            <span className="font-medium">{e.label}</span>
-                            {" · "}
-                            <span className="text-muted-foreground">{e.role}</span>
-                            {" · "}
-                            <span className="text-muted-foreground">{e.when}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Skills label + colorful marquee */}
-        <div id="skills" className="max-w-6xl mx-auto px-4">
-          <div className="mt-10 mb-2 flex items-center gap-2 text-sm uppercase tracking-widest text-muted-foreground">
-            <Sparkles className="h-4 w-4" />
-            <span>Skills</span>
-          </div>
-          <SkillsMarquee items={DATA.skills} />
-        </div>
-      </div>
-
-      {/* EXPERIENCE (timeline) */}
-      <Section id="experience" title="Experience" subtitle="Roles with measurable impact.">
-        <div className="relative pl-6 before:absolute before:left-3 before:top-0 before:bottom-0 before:w-px before:bg-border/70">
-          {DATA.experience.map((job, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-20% 0px -20% 0px" }}
-              transition={{ duration: 0.45, delay: i * 0.05 }}
-              className="relative mb-8"
-            >
-              <Dot />
-              <TiltCard>
-                <Card className="hover:shadow-md transition-shadow [background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015))]">
-                  <CardContent className="p-6">
-                    <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <div>
-                        <h3 className="text-lg font-semibold">{job.title}</h3>
-                        <p className="text-sm text-muted-foreground">{job.org}</p>
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        {job.start} – {job.end}
-                      </span>
-                    </div>
-                    <ul className="mt-3 space-y-2 text-sm list-disc list-inside">
-                      {job.points.map((p: string, idx: number) => (
-                        <li key={idx}>{p}</li>
-                      ))}
-                    </ul>
-
-                    {/* Media grid */}
-                    {(() => {
-                      const media: MediaItem[] = (job as any).media?.length
-                        ? ((job as any).media as MediaItem[])
-                        : ((job as any).images || []).map(
-                            (src: string) => ({ type: "image", src, alt: "experience image" } as MediaItem)
-                          );
-
-                      return media.length ? (
-                        <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
-                          {media.map((m, k) =>
-                            m.type === "video" ? (
-                              <video
-                                key={k}
-                                className="rounded-xl border w-full h-36 object-cover"
-                                controls
-                                playsInline
-                                preload="metadata"
-                                poster={m.poster}
-                              >
-                                <source src={encodeURI(m.src)} type="video/mp4" />
-                                Your browser does not support the video tag.
-                              </video>
-                            ) : (
-                              <button
-                                key={k}
-                                type="button"
-                                onClick={() => setLB({ src: m.src, alt: m.alt })}
-                                className="group relative block rounded-xl border overflow-hidden w-full h-36 cursor-zoom-in"
-                                aria-label="Open image preview"
-                              >
-                                <img
-                                  src={m.src}
-                                  alt={m.alt || "experience image"}
-                                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-                                />
-                              </button>
-                            )
-                          )}
-                        </div>
-                      ) : null;
-                    })()}
-
-                    {/* Links */}
-                    {(job as any).links?.length ? (
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {(job as any).links.map((l: any, k: number) => (
-                          <a key={k} href={l.href} target="_blank" rel="noopener noreferrer" className="inline-flex">
-                            <Button variant="secondary" size="sm" className="inline-flex items-center gap-1">
-                              {l.label} <ExternalLink className="h-3 w-3" />
-                            </Button>
-                          </a>
-                        ))}
-                      </div>
-                    ) : null}
-                  </CardContent>
-                </Card>
-              </TiltCard>
-            </motion.div>
-          ))}
-        </div>
-      </Section>
-
-      {/* PROJECTS */}
-      <Section id="projects" title="Projects" subtitle="Selected builds & case work.">
-        <div className="grid sm:grid-cols-2 gap-6">
-          {DATA.projects.map((p, i) => (
-            <motion.div key={i} whileHover={{ y: -4 }} transition={{ type: "spring", stiffness: 250, damping: 18 }}>
-              <TiltCard>
-                <Card className="group hover:shadow-md transition-shadow [background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015))] overflow-hidden">
-                  {/* Site preview image */}
-                  {(p as any).image && (
-                    <a
-                      href={p.links.find((l) => !(/github\.com/i.test(l.href)))?.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="relative block aspect-video bg-black/50 overflow-hidden"
-                    >
-                      <img
-                        src={(p as any).image}
-                        alt={`${p.name} preview`}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-full font-medium text-sm">
-                          <Globe className="h-4 w-4" />
-                          Visit Site
-                        </div>
-                      </div>
-                    </a>
-                  )}
-
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="w-full">
-                        <h3 className="text-lg font-semibold">{p.name}</h3>
-
-                        {Array.isArray((p as any).bullets) ? (
-                          <ul className="mt-2 text-sm text-muted-foreground space-y-1">
-                            {(p as any).bullets.map((b: { title: string; text: string }, idx: number) => (
-                              <li key={idx}>
-                                <span className="font-semibold">{b.title}</span> — {b.text}
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (p as any).desc ? (
-                          <p className="text-sm text-muted-foreground mt-1">{(p as any).desc}</p>
-                        ) : null}
-                      </div>
-                    </div>
-
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {p.tags.map((t, idx) => (
-                        <Badge key={idx} variant="secondary">
-                          {t}
-                        </Badge>
-                      ))}
-                    </div>
-
-                    {p.links?.length ? (
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {p.links.map((l, k) => {
-                          const isGitHub = /github\.com/i.test(l.href);
-                          return (
-                            <a key={k} href={l.href} target="_blank" rel="noopener noreferrer" className="inline-flex">
-                              <Button variant="secondary" size="sm" className="inline-flex items-center gap-1">
-                                {isGitHub ? <Github className="h-4 w-4" /> : <Globe className="h-4 w-4" />}
-                                {l.label}
-                              </Button>
-                            </a>
-                          );
-                        })}
-                      </div>
-                    ) : null}
-
-                    {(p as any).note ? (
-                      <p className="mt-2 text-xs text-muted-foreground">{(p as any).note}</p>
-                    ) : null}
-                  </CardContent>
-                </Card>
-              </TiltCard>
-            </motion.div>
-          ))}
-        </div>
-      </Section>
-
-      {/* VOLUNTEERING */}
-      <Section id="volunteering" title="Volunteering" subtitle="Community & leadership.">
-        <div className="grid sm:grid-cols-2 gap-6">
-          {DATA.volunteering.map((v, i) => (
-            <TiltCard key={i}>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2">
-                    <Heart className="h-5 w-5" />
-                    <div>
-                      <h3 className="font-semibold">{v.org}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {v.role} · {v.when}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="mt-3 text-sm">{v.desc}</p>
-                  {v.images?.length ? (
-                    <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
-                      {v.images.map((src, k) => (
-                        <button
-                          key={k}
-                          type="button"
-                          onClick={() => setLB({ src, alt: "volunteering image" })}
-                          className="group relative block rounded-xl border overflow-hidden w-full h-36 cursor-zoom-in"
-                          aria-label="Open image preview"
-                        >
-                          <img
-                            src={src}
-                            alt="volunteering image"
-                            className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  ) : null}
-                </CardContent>
-              </Card>
-            </TiltCard>
-          ))}
-        </div>
-      </Section>
-
-      {/* AWARDS & CERTIFICATES (horizontal gallery) */}
-      <Section id="awards" title="Awards & Certificates" subtitle="Highlights, certificates, and honors.">
-        <div className="relative">
-          <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-background to-transparent" />
-          <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-background to-transparent" />
-          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pr-2">
-            {(DATA.awards as AwardItem[]).map((a, i) => (
-              <TiltCard key={i}>
-                <Card className="min-w-[280px] max-w-[320px] snap-start overflow-hidden">
-                  <button
-                    type="button"
-                    onClick={() => setLB({ src: a.image, alt: a.title })}
-                    className="block w-full"
-                    aria-label={`Open ${a.title} image`}
-                  >
-                    <img
-                      src={a.image}
-                      alt={a.title}
-                      className="w-full h-40 object-cover transition-transform duration-300 hover:scale-[1.02]"
-                    />
-                  </button>
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-2">
-                      <Award className="h-4 w-4" />
-                      <p className="text-sm font-medium">{a.title}</p>
-                    </div>
-                    {(a.issuer || a.date) && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {a.issuer ? a.issuer : ""}
-                        {a.issuer && a.date ? " • " : ""}
-                        {a.date ? a.date : ""}
-                      </p>
-                    )}
-                    {a.link ? (
-                      <a
-                        href={a.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-xs underline mt-2"
-                      >
-                        View / Verify <ExternalLink className="h-3 w-3" />
-                      </a>
-                    ) : null}
-                  </CardContent>
-                </Card>
-              </TiltCard>
+      {/* Navigation */}
+      <header className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center gap-6 px-5 py-3 sm:px-8">
+          <a href="#top" className="font-display text-lg font-semibold tracking-tight">
+            {ME.name}
+          </a>
+          <nav aria-label="Sections" className="ml-auto hidden items-center gap-6 text-[0.95rem] md:flex">
+            {NAV.map(([label, href]) => (
+              <a key={href} href={href} className="text-muted hover:text-ink">
+                {label}
+              </a>
             ))}
-          </div>
-        </div>
-      </Section>
-
-      {/* CONTACT */}
-      <Section id="contact" title="Contact" subtitle="Happy to share work samples & references.">
-        <div className="grid sm:grid-cols-2 gap-6">
-          <TiltCard>
-            <Card>
-              <CardContent className="p-6 space-y-3">
-                <div className="text-sm text-muted-foreground">Email me directly:</div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Mail className="h-4 w-4" />
-                  <a className="underline" href={`mailto:${DATA.contacts.email}`}>
-                    {DATA.contacts.email}
-                  </a>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Phone className="h-4 w-4" />
-                  {DATA.contacts.phone}
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <MapPin className="h-4 w-4" />
-                  {DATA.location}
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Github className="h-4 w-4" />
-                  <a className="underline" href={DATA.contacts.github} target="_blank">
-                    GitHub
-                  </a>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Linkedin className="h-4 w-4" />
-                  <a className="underline" href={DATA.contacts.linkedin} target="_blank">
-                    LinkedIn
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
-          </TiltCard>
-
-          <TiltCard>
-            <Card className="border-dashed">
-              <CardContent className="p-6">
-                <div className="text-sm text-muted-foreground mb-2">Quick message (opens your email app):</div>
-                <div className="flex items-center gap-2">
-                  <Input placeholder="Subject" id="subj" />
-                  <a
-                    id="mailto"
-                    href={`mailto:${DATA.contacts.email}?subject=Hello%20${encodeURIComponent(DATA.name)}`}
-                    onClick={(e) => {
-                      const s = (document.getElementById("subj") as HTMLInputElement)?.value || "Hello";
-                      (e.currentTarget as HTMLAnchorElement).href = `mailto:${DATA.contacts.email}?subject=${encodeURIComponent(
-                        s
-                      )}`;
-                    }}
-                  >
-                    <Button>Open Mail</Button>
-                  </a>
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  For serious roles, attach your resume and link to specific projects.
-                </p>
-              </CardContent>
-            </Card>
-          </TiltCard>
-        </div>
-      </Section>
-
-      {/* FOOTER */}
-      <footer className="border-t py-10">
-        <div className="max-w-6xl mx-auto px-4 text-sm text-muted-foreground flex flex-wrap items-center justify-between gap-2">
-          <span>
-            © {new Date().getFullYear()} {DATA.name}. All rights reserved.
-          </span>
-          <a href={DATA.contacts.resumeUrl} className="inline-flex items-center gap-1 underline">
-            Download Resume <ExternalLink className="h-3 w-3" />
+          </nav>
+          <a
+            href={ME.resume}
+            className="ml-auto inline-flex items-center gap-2 bg-ink px-4 py-2 text-sm font-medium text-white hover:bg-signal md:ml-0"
+          >
+            <Download className="h-4 w-4" aria-hidden /> Resume
           </a>
         </div>
-      </footer>
+        <nav aria-label="Sections" className="flex gap-5 overflow-x-auto border-t border-line px-5 py-2 text-[0.95rem] md:hidden">
+          {NAV.map(([label, href]) => (
+            <a key={href} href={href} className="shrink-0 text-muted hover:text-ink">
+              {label}
+            </a>
+          ))}
+        </nav>
+      </header>
 
-      {/* LIGHTBOX OVERLAY */}
-      <Lightbox open={!!lb} src={lb?.src ?? ""} alt={lb?.alt} onClose={() => setLB(null)} />
+      <main id="main">
+        {/* Hero */}
+        <div id="top" className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-12 sm:px-8 lg:grid-cols-[1fr_26rem] lg:pb-24 lg:pt-20">
+          <div>
+            <p className="flex items-center gap-2 text-muted">
+              <MapPin className="h-4 w-4" aria-hidden /> {ME.location}
+            </p>
+            <h1 className="mt-4 text-5xl font-semibold sm:text-7xl">{ME.name}</h1>
+            <p className="mt-6 max-w-xl font-display text-2xl leading-snug tracking-tight sm:text-[1.75rem]">
+              Software developer who ships. Payment services at Libro Credit Union on weekdays, hackathon hardware on
+              weekends.
+            </p>
+            <p className="mt-5 max-w-xl text-muted">
+              I am a Software Engineering student at Western University on a developer co-op, building C#/.NET services
+              behind e-Transfers. Outside work I build computer-vision projects and web apps that people use every day.
+            </p>
 
-      {/* tiny global helpers */}
-      <style jsx global>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <a
+                href={`mailto:${ME.email}`}
+                className="inline-flex items-center gap-2 bg-signal px-5 py-3 font-medium text-white hover:bg-signal-deep"
+              >
+                <Mail className="h-4 w-4" aria-hidden /> Email me
+              </a>
+              <a href={ME.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 font-medium hover:text-signal">
+                <Github className="h-5 w-5" aria-hidden /> GitHub
+              </a>
+              <a href={ME.linkedin} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 font-medium hover:text-signal">
+                <Linkedin className="h-5 w-5" aria-hidden /> LinkedIn
+              </a>
+            </div>
+          </div>
+
+          {/* Photo with detection boxes, the way his own vision projects label a frame */}
+          <figure className="mx-auto w-full max-w-md lg:max-w-none">
+            <div className="relative overflow-hidden bg-ink">
+              <img
+                src="/photos/hero.jpg"
+                alt="Mohammed Owda presenting G.A.R.Y. at Hack Western 13, with two laptops showing the project"
+                width={1200}
+                height={1500}
+                className="block h-auto w-full"
+              />
+              <div aria-hidden className="detect" style={{ left: "27%", top: "7%", width: "55%", height: "69%" }}>
+                <span className="detect-label">mohammed 0.99</span>
+              </div>
+              <div aria-hidden className="detect detect-late" style={{ left: "50%", top: "77%", width: "40%", height: "21%" }}>
+                <span className="detect-label">gary_demo 0.97</span>
+              </div>
+            </div>
+            <figcaption className="mt-3 text-sm text-muted">Demo day at Hack Western 13, November 2026.</figcaption>
+          </figure>
+        </div>
+
+        {/* Now */}
+        <div className="border-t border-line bg-surface">
+          <dl className="mx-auto grid max-w-6xl divide-y divide-line px-5 sm:px-8 md:grid-cols-3 md:divide-x md:divide-y-0">
+            {NOW.map((n, i) => (
+              <div key={n.label} className={`py-6 ${i === 0 ? "md:pr-8" : "md:px-8"}`}>
+                <dt className="text-sm text-muted">{n.label}</dt>
+                <dd className="mt-1">
+                  <span className="block font-display text-xl font-semibold tracking-tight">{n.value}</span>
+                  <span className="mt-1 block text-[0.95rem] text-muted">{n.detail}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        {/* Experience */}
+        <Section id="experience" title="Experience">
+          <ol className="divide-y divide-line">
+            {EXPERIENCE.map((job) => (
+              <li key={job.org} className="py-8 first:pt-0 last:pb-0">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+                  <h3 className="text-xl font-semibold">{job.title}</h3>
+                  <p className="text-[0.95rem] text-muted">{job.when}</p>
+                </div>
+                <p className="mt-1 font-medium text-signal">{job.org}</p>
+                <ul className="mt-4 max-w-2xl list-disc space-y-2 pl-5 marker:text-line">
+                  {job.points.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                </ul>
+                {job.photos?.length ? (
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    {job.photos.map((ph) => (
+                      <img key={ph.src} src={ph.src} alt={ph.alt} loading="lazy" className="h-44 w-auto max-w-full object-cover" />
+                    ))}
+                  </div>
+                ) : null}
+                {job.link ? (
+                  <p className="mt-4">
+                    <a href={job.link.href} className="inline-flex items-center gap-2 font-medium text-signal underline decoration-signal/30 hover:decoration-signal">
+                      <Play className="h-4 w-4" aria-hidden /> {job.link.label}
+                    </a>
+                  </p>
+                ) : null}
+              </li>
+            ))}
+          </ol>
+        </Section>
+
+        {/* Hackathons */}
+        <Section id="hackathons" title="Hackathons" note="Three first-place finishes, and a goat.">
+          {/* Latest: G.A.R.Y. */}
+          <article className="bg-ink text-white">
+            <img
+              src="/photos/gary-team.jpg"
+              alt="The four-person G.A.R.Y. team behind two laptops running the project at Hack Western 13"
+              width={1600}
+              height={1200}
+              loading="lazy"
+              className="block aspect-[16/10] w-full object-cover object-[center_35%]"
+            />
+            <div className="p-6 sm:p-9">
+              <p className="inline-block bg-tag px-2 py-1 font-label text-xs font-medium text-ink">
+                4th place, QNX hardware stream, Hack Western 13
+              </p>
+              <h3 className="mt-4 text-3xl font-semibold sm:text-4xl">G.A.R.Y., a pocket goat that turns walks into quests</h3>
+              <p className="mt-4 max-w-2xl text-white/80">
+                Press his button and G.A.R.Y. identifies what the camera sees, then turns real places around London,
+                Ontario into quests. A Raspberry Pi 5 running QNX 8.0 runs two vision models per frame in C++ and answers
+                a button press in about 170 ms. Photos and location never leave the device.
+              </p>
+              <p className="mt-3 max-w-2xl text-white/80">
+                Built in a weekend by a team of four with a FastAPI back end and a React web app styled as a pixel-art
+                handheld.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3 font-medium">
+                <a
+                  href="https://youtube.com/shorts/uiAKWd4bhNw"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-white px-4 py-2 text-ink hover:bg-tag"
+                >
+                  <Play className="h-4 w-4" aria-hidden /> Watch the demo
+                </a>
+                <a href="https://devpost.com/software/gary-the-goat" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 underline decoration-white/40 hover:decoration-white">
+                  Devpost <ArrowUpRight className="h-4 w-4" aria-hidden />
+                </a>
+                <a href="https://github.com/anaybaid7/hackwestern13-gary" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 underline decoration-white/40 hover:decoration-white">
+                  Code <ArrowUpRight className="h-4 w-4" aria-hidden />
+                </a>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-px bg-white/10">
+              <img src="/photos/gary-judging.jpg" alt="Explaining G.A.R.Y. to a judge during the first judging round" loading="lazy" className="aspect-[4/3] w-full object-cover" />
+              <img src="/photos/gary-building.jpg" alt="The team debugging around a laptop late at night" loading="lazy" className="aspect-[4/3] w-full object-cover object-[center_40%]" />
+            </div>
+          </article>
+
+          {/* Earlier results */}
+          <ul className="mt-12 divide-y divide-line border-y border-line">
+            {RESULTS.map((r) => (
+              <li key={r.event} className="grid gap-5 py-7 sm:grid-cols-[5.5rem_1fr_9rem] sm:items-start">
+                <p className="font-display text-4xl font-semibold tracking-tight text-signal">{r.place}</p>
+                <div>
+                  <h3 className="text-xl font-semibold">{r.project ?? r.event}</h3>
+                  {r.project ? <p className="mt-1 text-[0.95rem] text-muted">{r.event}</p> : null}
+                  {r.text ? <p className="mt-3 max-w-xl">{r.text}</p> : null}
+                  {r.href ? (
+                    <p className="mt-3">
+                      <TextLink href={r.href}>Code</TextLink>
+                    </p>
+                  ) : null}
+                </div>
+                <img src={r.photo} alt={r.alt} loading="lazy" className="aspect-[4/3] w-full object-cover sm:w-36" />
+              </li>
+            ))}
+          </ul>
+        </Section>
+
+        {/* Projects */}
+        <Section id="projects" title="Projects" note="Things I built that are live or in use.">
+          <ul className="grid gap-x-10 gap-y-10 sm:grid-cols-2">
+            {PROJECTS.map((p) => (
+              <li key={p.name} className="border-t-2 border-ink pt-4">
+                <h3 className="text-xl font-semibold">{p.name}</h3>
+                <p className="mt-2">{p.text}</p>
+                <p className="mt-3 text-[0.95rem] text-muted">{p.stack}</p>
+                {p.links.length ? (
+                  <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
+                    {p.links.map((l) => (
+                      <TextLink key={l.href} href={l.href}>
+                        {l.label}
+                      </TextLink>
+                    ))}
+                  </p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </Section>
+
+        {/* Leadership */}
+        <Section id="leadership" title="Leadership">
+          <div className="grid grid-cols-3 gap-3">
+            {LEADERSHIP_PHOTOS.map((ph) => (
+              <img key={ph.src} src={ph.src} alt={ph.alt} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+            ))}
+          </div>
+          <ul className="mt-8 divide-y divide-line">
+            {LEADERSHIP.map((l) => (
+              <li key={l.org} className="grid gap-x-8 gap-y-1 py-5 sm:grid-cols-[1fr_9.5rem]">
+                <div>
+                  <h3 className="font-body text-[1.0625rem] font-semibold tracking-normal">
+                    {l.role}, <span className="font-medium text-signal">{l.org}</span>
+                  </h3>
+                  <p className="mt-1 max-w-xl text-muted">{l.text}</p>
+                </div>
+                <p className="text-[0.95rem] text-muted sm:text-right">{l.when}</p>
+              </li>
+            ))}
+          </ul>
+        </Section>
+
+        {/* Skills */}
+        <Section id="skills" title="Skills">
+          <dl className="divide-y divide-line">
+            {SKILLS.map((s) => (
+              <div key={s.group} className="grid gap-x-8 gap-y-1 py-4 first:pt-0 sm:grid-cols-[11rem_1fr]">
+                <dt className="font-semibold">{s.group}</dt>
+                <dd className="text-muted">{s.items}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-8 text-[0.95rem] text-muted">
+            Awards: Dean&apos;s Honour List (2024–2025), Chorley &amp; Bisset Award (2025), MacKay-Lassonde Award (2025).
+          </p>
+        </Section>
+
+        {/* Contact */}
+        <section id="contact" className="bg-ink text-white">
+          <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 lg:py-28">
+            <h2 className="max-w-3xl text-4xl font-semibold sm:text-6xl">Looking for a developer co-op? Let&apos;s talk.</h2>
+            <p className="mt-6 max-w-xl text-white/75">
+              I am available for a co-op term starting January 2027. Email is the fastest way to reach me.
+            </p>
+            <div className="mt-10 flex flex-wrap gap-x-10 gap-y-4 text-lg">
+              <a href={`mailto:${ME.email}`} className="inline-flex items-center gap-2 underline decoration-white/40 hover:decoration-tag">
+                <Mail className="h-5 w-5" aria-hidden /> {ME.email}
+              </a>
+              <a href="tel:+12269774351" className="inline-flex items-center gap-2 underline decoration-white/40 hover:decoration-tag">
+                <Phone className="h-5 w-5" aria-hidden /> {ME.phone}
+              </a>
+              <a href={ME.linkedin} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 underline decoration-white/40 hover:decoration-tag">
+                <Linkedin className="h-5 w-5" aria-hidden /> LinkedIn
+              </a>
+              <a href={ME.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 underline decoration-white/40 hover:decoration-tag">
+                <Github className="h-5 w-5" aria-hidden /> GitHub
+              </a>
+            </div>
+            <p className="mt-10">
+              <a href={ME.resume} className="inline-flex items-center gap-2 bg-white px-5 py-3 font-medium text-ink hover:bg-tag">
+                <Download className="h-4 w-4" aria-hidden /> Download resume
+              </a>
+            </p>
+          </div>
+          <div className="border-t border-white/15">
+            <p className="mx-auto max-w-6xl px-5 py-6 text-sm text-white/60 sm:px-8">
+              © {new Date().getFullYear()} {ME.name}. {ME.location}.
+            </p>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
