@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme inline {
+@theme {
   --color-paper: #f3f5f9;
   --color-surface: #ffffff;
   --color-ink: #0f1b2d;
@@ -114,4 +114,37 @@ a {
   .detect {
     animation: none;
   }
+}
+
+/* Section tones: each one re-points the shared colour tokens, so the same markup works on any background */
+.tone-blue {
+  background: #2447f9;
+  color: #ffffff;
+  --color-muted: rgb(255 255 255 / 0.84);
+  --color-line: rgb(255 255 255 / 0.28);
+  --color-signal: #ffd60a;
+}
+
+.tone-yellow {
+  background: #ffd60a;
+  color: #0f1b2d;
+  --color-muted: #3d3a1c;
+  --color-line: rgb(15 27 45 / 0.22);
+}
+
+.tone-dark {
+  background: #0f1b2d;
+  color: #ffffff;
+  --color-muted: rgb(255 255 255 / 0.72);
+  --color-line: rgb(255 255 255 / 0.16);
+  --color-signal: #ffd60a;
+}
+
+.tone-tint {
+  background: #e2e9ff;
+  --color-line: #bccaf6;
+}
+
+.tone-white {
+  background: #ffffff;
 }

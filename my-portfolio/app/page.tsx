@@ -249,9 +249,21 @@ const NAV = [
 /* ==========================================================
  * Building blocks
  * ========================================================== */
-function Section({ id, title, note, children }: { id: string; title: string; note?: string; children: React.ReactNode }) {
+function Section({
+  id,
+  title,
+  note,
+  tone = "",
+  children,
+}: {
+  id: string;
+  title: string;
+  note?: string;
+  tone?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <section id={id} className="border-t border-line">
+    <section id={id} className={tone}>
       <div className="mx-auto grid max-w-6xl gap-x-12 gap-y-8 px-5 py-16 sm:px-8 lg:grid-cols-[13rem_1fr] lg:py-24">
         <div>
           <h2 className="text-3xl font-semibold lg:sticky lg:top-24">{title}</h2>
@@ -292,28 +304,28 @@ export default function PortfolioPage() {
       </a>
 
       {/* Navigation */}
-      <header className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur">
+      <header className="tone-dark sticky top-0 z-40">
         <div className="mx-auto flex max-w-6xl items-center gap-6 px-5 py-3 sm:px-8">
           <a href="#top" className="font-display text-lg font-semibold tracking-tight">
             {ME.name}
           </a>
           <nav aria-label="Sections" className="ml-auto hidden items-center gap-6 text-[0.95rem] md:flex">
             {NAV.map(([label, href]) => (
-              <a key={href} href={href} className="text-muted hover:text-ink">
+              <a key={href} href={href} className="text-muted hover:text-white">
                 {label}
               </a>
             ))}
           </nav>
           <a
             href={ME.resume}
-            className="ml-auto inline-flex items-center gap-2 bg-ink px-4 py-2 text-sm font-medium text-white hover:bg-signal md:ml-0"
+            className="ml-auto inline-flex items-center gap-2 bg-tag px-4 py-2 text-sm font-medium text-ink hover:bg-white md:ml-0"
           >
             <Download className="h-4 w-4" aria-hidden /> Resume
           </a>
         </div>
         <nav aria-label="Sections" className="flex gap-5 overflow-x-auto border-t border-line px-5 py-2 text-[0.95rem] md:hidden">
           {NAV.map(([label, href]) => (
-            <a key={href} href={href} className="shrink-0 text-muted hover:text-ink">
+            <a key={href} href={href} className="shrink-0 text-muted hover:text-white">
               {label}
             </a>
           ))}
@@ -322,7 +334,8 @@ export default function PortfolioPage() {
 
       <main id="main">
         {/* Hero */}
-        <div id="top" className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-12 sm:px-8 lg:grid-cols-[1fr_26rem] lg:pb-24 lg:pt-20">
+        <div id="top" className="tone-blue">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-12 sm:px-8 lg:grid-cols-[1fr_26rem] lg:pb-24 lg:pt-20">
           <div>
             <p className="flex items-center gap-2 text-muted">
               <MapPin className="h-4 w-4" aria-hidden /> {ME.location}
@@ -340,7 +353,7 @@ export default function PortfolioPage() {
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
               <a
                 href={`mailto:${ME.email}`}
-                className="inline-flex items-center gap-2 bg-signal px-5 py-3 font-medium text-white hover:bg-signal-deep"
+                className="inline-flex items-center gap-2 bg-tag px-5 py-3 font-medium text-ink hover:bg-white"
               >
                 <Mail className="h-4 w-4" aria-hidden /> Email me
               </a>
@@ -373,9 +386,10 @@ export default function PortfolioPage() {
             <figcaption className="mt-3 text-sm text-muted">Demo day at Hack Western 13, November 2026.</figcaption>
           </figure>
         </div>
+        </div>
 
         {/* Now */}
-        <div className="border-t border-line bg-surface">
+        <div className="tone-yellow">
           <dl className="mx-auto grid max-w-6xl divide-y divide-line px-5 sm:px-8 md:grid-cols-3 md:divide-x md:divide-y-0">
             {NOW.map((n, i) => (
               <div key={n.label} className={`py-6 ${i === 0 ? "md:pr-8" : "md:px-8"}`}>
@@ -390,7 +404,7 @@ export default function PortfolioPage() {
         </div>
 
         {/* Experience */}
-        <Section id="experience" title="Experience">
+        <Section id="experience" title="Experience" tone="tone-white">
           <ol className="divide-y divide-line">
             {EXPERIENCE.map((job) => (
               <li key={job.org} className="py-8 first:pt-0 last:pb-0">
@@ -424,9 +438,9 @@ export default function PortfolioPage() {
         </Section>
 
         {/* Hackathons */}
-        <Section id="hackathons" title="Hackathons" note="Three first-place finishes, and a goat.">
+        <Section id="hackathons" title="Hackathons" note="Three first-place finishes, and a goat." tone="tone-dark">
           {/* Latest: G.A.R.Y. */}
-          <article className="bg-ink text-white">
+          <article className="bg-[#2447f9] text-white">
             <img
               src="/photos/gary-team.jpg"
               alt="The four-person G.A.R.Y. team behind two laptops running the project at Hack Western 13"
@@ -494,10 +508,10 @@ export default function PortfolioPage() {
         </Section>
 
         {/* Projects */}
-        <Section id="projects" title="Projects" note="Things I built that are live or in use.">
-          <ul className="grid gap-x-10 gap-y-10 sm:grid-cols-2">
+        <Section id="projects" title="Projects" note="Things I built that are live or in use." tone="tone-tint">
+          <ul className="grid gap-5 sm:grid-cols-2">
             {PROJECTS.map((p) => (
-              <li key={p.name} className="border-t-2 border-ink pt-4">
+              <li key={p.name} className="border-t-4 border-signal bg-surface p-5">
                 <h3 className="text-xl font-semibold">{p.name}</h3>
                 <p className="mt-2">{p.text}</p>
                 <p className="mt-3 text-[0.95rem] text-muted">{p.stack}</p>
@@ -516,7 +530,7 @@ export default function PortfolioPage() {
         </Section>
 
         {/* Leadership */}
-        <Section id="leadership" title="Leadership">
+        <Section id="leadership" title="Leadership" tone="tone-white">
           <div className="grid grid-cols-3 gap-3">
             {LEADERSHIP_PHOTOS.map((ph) => (
               <img key={ph.src} src={ph.src} alt={ph.alt} loading="lazy" className="aspect-[4/3] w-full object-cover" />
@@ -538,7 +552,7 @@ export default function PortfolioPage() {
         </Section>
 
         {/* Skills */}
-        <Section id="skills" title="Skills">
+        <Section id="skills" title="Skills" tone="tone-yellow">
           <dl className="divide-y divide-line">
             {SKILLS.map((s) => (
               <div key={s.group} className="grid gap-x-8 gap-y-1 py-4 first:pt-0 sm:grid-cols-[11rem_1fr]">
@@ -553,10 +567,10 @@ export default function PortfolioPage() {
         </Section>
 
         {/* Contact */}
-        <section id="contact" className="bg-ink text-white">
+        <section id="contact" className="tone-blue">
           <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8 lg:py-28">
             <h2 className="max-w-3xl text-4xl font-semibold sm:text-6xl">Looking for a developer co-op? Let&apos;s talk.</h2>
-            <p className="mt-6 max-w-xl text-white/75">
+            <p className="mt-6 max-w-xl text-muted">
               I am available for a co-op term starting January 2027. Email is the fastest way to reach me.
             </p>
             <div className="mt-10 flex flex-wrap gap-x-10 gap-y-4 text-lg">
@@ -579,8 +593,8 @@ export default function PortfolioPage() {
               </a>
             </p>
           </div>
-          <div className="border-t border-white/15">
-            <p className="mx-auto max-w-6xl px-5 py-6 text-sm text-white/60 sm:px-8">
+          <div className="tone-dark">
+            <p className="mx-auto max-w-6xl px-5 py-6 text-sm text-muted sm:px-8">
               © {new Date().getFullYear()} {ME.name}. {ME.location}.
             </p>
           </div>
